@@ -1,6 +1,9 @@
 <template>
   <div>
-    <router-link :to="{ name: 'admin', params: { userId: 123 }}">Admin Page</router-link>
+    <ul>
+      <li><router-link :to="{ name: 'AdminControlPage'}">Admin Page</router-link></li>
+      <li><router-link :to="{ name: 'QuizPage'}">Quiz Page</router-link></li>
+    </ul>
   </div>
 </template>
 

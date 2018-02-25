@@ -1,8 +1,6 @@
 <template>
   <div class="hello">
-    <div id="admin-header">
-      <connection-indicator></connection-indicator>
-    </div>
+    <app-header v-bind:is-connected="isConnected"></app-header>
 
     <h2>{{ pageTitle }}</h2>
 
@@ -16,36 +14,33 @@
 <script>
   import SockJS from 'sockjs-client';
   import Stomp from 'stompjs';
-  import ConnectionIndicator from "./ConnectionIndicator";
+  import AppHeader from "./AppHeader";
 
   export default {
-    components: {ConnectionIndicator},
+    components: {
+      AppHeader
+    },
     name: "admin-control-page",
     data() {
       return {
-        received_messages: [],
         send_message: null,
-        connected: false,
+        isConnected: false,
         pageTitle: 'Admin Control'
       };
     },
     methods: {
-      subscribeOnCommand() {
-        this.stompClient.subscribe("/app/client/getCommand", frame => {
-          console.log(frame);
-        });
-      },
       sendCommand() {
         this.stompClient.send("/app/admin/getCommand", {}, JSON.stringify({command: 'LOAD'}));
       },
-      connect() {
+      connectWSServer() {
         this.ws = new SockJS("http://localhost:8080/app");
         this.stompClient = Stomp.over(this.ws);
         this.stompClient.connect(
           {},
           frame => {
             console.log(frame);
-            this.subscribeOnCommand();
+            this.isConnected = true;
+            // this.subscribeOnCommand();
           },
           error => {
             console.log(error);
@@ -54,16 +49,12 @@
       }
     },
     mounted() {
-      this.connect();
+      this.connectWSServer();
     }
   };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  #admin-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-  }
+
 </style>
