@@ -1,6 +1,7 @@
 <template>
     <div>
       <app-header v-bind:is-connected="isConnected"></app-header>
+      <question v-bind:question="currentQuestion"></question>
     </div>
 </template>
 
@@ -8,22 +9,38 @@
     import SockJS from 'sockjs-client';
     import Stomp from 'stompjs';
     import AppHeader from "./AppHeader";
+    import Question from "./Question";
 
     export default {
-      components: {AppHeader},
+      components: {
+        Question,
+        AppHeader
+      },
       name: "quiz-page",
       data() {
         return {
+          commands: {
+            load: 'LOAD',
+            next: 'NEXT',
+            prev: 'PREV'
+          },
           isConnected: false,
-          questionList: []
+          questionList: [],
+          currentQuestionIndex: 0
         };
       },
       methods: {
         subscribeOnCommand() {
           this.stompClient.subscribe("/app/client/getCommand", frame => {
-            // console.log(frame);
-            this.questionList = JSON.parse(frame.body).content;
-            console.log(this.questionList);
+            let message = JSON.parse(frame.body);
+            let command = message.command;
+            if (command === this.commands.load) {
+              if (this.questionList.length === 0) {
+                this.questionList = JSON.parse(frame.body).content;
+              }
+            } else if (command === this.commands.next || command === this.commands.prev) {
+              this.changeIndex(message.command);
+            }
           });
         },
         connectWSServer() {
@@ -40,6 +57,18 @@
               console.log(error);
             }
           );
+        },
+        changeIndex(command) {
+          if (command === this.commands.next && this.currentQuestionIndex < this.questionList.length - 1) {
+            this.currentQuestionIndex++;
+          } else if (command === this.commands.prev && this.currentQuestionIndex > 0) {
+            this.currentQuestionIndex--;
+          }
+        }
+      },
+      computed: {
+        currentQuestion: function () {
+          return this.questionList[this.currentQuestionIndex];
         }
       },
       mounted() {
