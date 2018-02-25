@@ -1,8 +1,14 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+    <div id="admin-header">
+      <connection-indicator></connection-indicator>
+    </div>
 
-    <button v-on:click="sendCommand">Load Quiz</button>
+    <h2>{{ pageTitle }}</h2>
+
+    <div>
+      <button v-on:click="sendCommand">Load Quiz</button>
+    </div>
 
   </div>
 </template>
@@ -10,15 +16,17 @@
 <script>
   import SockJS from 'sockjs-client';
   import Stomp from 'stompjs';
+  import ConnectionIndicator from "./ConnectionIndicator";
 
   export default {
-    name: "hello-world",
+    components: {ConnectionIndicator},
+    name: "admin-control-page",
     data() {
       return {
         received_messages: [],
         send_message: null,
         connected: false,
-        msg: 'Frontend sucks'
+        pageTitle: 'Admin Control'
       };
     },
     methods: {
@@ -44,12 +52,6 @@
           }
         );
       }
-      // disconnect() {
-      //   if (this.stompClient) {
-      //     this.stompClient.disconnect();
-      //   }
-      //   this.connected = false;
-      // }
     },
     mounted() {
       this.connect();
@@ -59,4 +61,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  #admin-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
 </style>
