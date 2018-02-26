@@ -1,7 +1,14 @@
 <template>
     <div>
       <app-header v-bind:is-connected="isConnected"></app-header>
-      <question v-bind:question="currentQuestion"></question>
+
+      <template v-if="questionList.length > 0">
+        <question  v-bind:question="currentQuestion"></question>
+      </template>
+      <template v-else>
+        <h2>Игра скоро начнется...</h2>
+      </template>
+
     </div>
 </template>
 
@@ -9,7 +16,7 @@
     import SockJS from 'sockjs-client';
     import Stomp from 'stompjs';
     import AppHeader from "./AppHeader";
-    import Question from "./Question";
+    import Question from "./questions/Question";
 
     export default {
       components: {
