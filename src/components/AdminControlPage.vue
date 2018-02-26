@@ -1,13 +1,22 @@
 <template>
-  <div class="hello">
+  <div>
     <app-header v-bind:is-connected="isConnected"></app-header>
 
-    <h2>{{ pageTitle }}</h2>
+    <div id="flex-wrapper">
+      <h2>{{ pageTitle }}</h2>
 
-    <div>
-      <button v-on:click="sendCommand(commands.load)">Load Quiz</button>
-      <button v-on:click="sendCommand(commands.next)">Next</button>
-      <button v-on:click="sendCommand(commands.prev)">Prev</button>
+      <div id="control-board">
+        <div class="flex-row">
+          <button class="btn-style" v-on:click="sendCommand(commands.load)">Load Quiz</button>
+        </div>
+        <div class="flex-row">
+          <button class="btn-style" v-on:click="sendCommand(commands.turnSound)">Turn On Prekol 8==0</button>
+        </div>
+        <div class="flex-row">
+          <button class="btn-style" v-on:click="sendCommand(commands.prev)">← Prev</button>
+          <button class="btn-style" v-on:click="sendCommand(commands.next)">Next →</button>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -28,7 +37,8 @@
         commands: {
           load: 'LOAD',
           next: 'NEXT',
-          prev: 'PREV'
+          prev: 'PREV',
+          turnSound: 'TURN_SOUND'
         },
         send_message: null,
         isConnected: false,
@@ -61,7 +71,30 @@
   };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+  #flex-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .flex-row {
+    display: flex;
+    flex-direction: row;
+  }
+  .btn-style {
+    margin-top: 5px;
+    margin-left: 5px;
+    width: 100%;
+    height: 40px;
+    background-color: #ffffff;
+    border: 2px solid #dedede;
+    border-radius: 4px;
+    font-size: 1.3em;
+    font-family: "Arial";
+  }
+  #control-board {
+    margin-top: 40px;
+    width: 250px;
+  }
 </style>
