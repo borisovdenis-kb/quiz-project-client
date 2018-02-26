@@ -3,7 +3,11 @@
       <app-header v-bind:is-connected="isConnected"></app-header>
 
       <template v-if="questionList.length > 0">
-        <question  v-bind:question="currentQuestion"></question>
+        <question
+          v-bind:question="currentQuestion"
+          v-bind:is-timer-active="isTimerActive"
+          v-bind:is-sound-turn-on="isSoundTurnOn">
+        </question>
       </template>
       <template v-else>
         <h2>Игра скоро начнется...</h2>
@@ -29,9 +33,13 @@
           commands: {
             load: 'LOAD',
             next: 'NEXT',
-            prev: 'PREV'
+            prev: 'PREV',
+            start: 'START',
+            turnSound: 'TURN_SOUND'
           },
+          isTimerActive: false,
           isConnected: false,
+          isSoundTurnOn: false,
           questionList: [],
           currentQuestionIndex: 0
         };
@@ -41,12 +49,17 @@
           this.stompClient.subscribe("/app/client/getCommand", frame => {
             let message = JSON.parse(frame.body);
             let command = message.command;
+
             if (command === this.commands.load) {
               if (this.questionList.length === 0) {
                 this.questionList = JSON.parse(frame.body).content;
               }
             } else if (command === this.commands.next || command === this.commands.prev) {
               this.changeIndex(message.command);
+            } else if (command === this.commands.start) {
+              this.isTimerActive = true;
+            } else if (command === this.commands.turnSound) {
+              this.isSoundTurnOn = true;
             }
           });
         },

@@ -13,6 +13,9 @@
           <button class="btn-style" v-on:click="sendCommand(commands.turnSound)">Turn On Prekol 8==0</button>
         </div>
         <div class="flex-row">
+          <button class="btn-style" v-on:click="sendCommand(commands.start)">Start</button>
+        </div>
+        <div class="flex-row">
           <button class="btn-style" v-on:click="sendCommand(commands.prev)">← Prev</button>
           <button class="btn-style" v-on:click="sendCommand(commands.next)">Next →</button>
         </div>
@@ -38,6 +41,7 @@
           load: 'LOAD',
           next: 'NEXT',
           prev: 'PREV',
+          start: 'START',
           turnSound: 'TURN_SOUND'
         },
         send_message: null,

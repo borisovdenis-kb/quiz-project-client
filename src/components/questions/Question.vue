@@ -3,31 +3,46 @@
 
       <h1>Раунд {{ question.roundNumber }}</h1>
 
-      <div id="image-container" class="shadow">
+      <timer
+        v-bind:time-needed-sec="question.timeNeededSec"
+        v-bind:is-timer-active="isTimerActive"
+      ></timer>
+
+      <div id="image-container">
         <img class="img-style" v-bind:src="question.imageFilePath"/>
       </div>
 
-      <div id="question-text-container" class="shadow">
+      <div id="question-text-container">
         <span>{{ question.question }}</span>
       </div>
 
-      <span>Round: {{ question.roundNumber }}</span>
-      <span>Time: {{ question.timeNeeded }}</span>
+      <audio id="sound" v-bind:src="question.soundFilePath"></audio>
     </div>
 </template>
 
 <script>
+    import Timer from "./Timer";
+
     export default {
+        components: {Timer},
         name: "question",
-        props: ['question'],
+        props: ['question', 'isTimerActive', 'isSoundTurnOn'],
         data() {
           return {
+            sound: null
           }
         },
-        computed: {
-          imgPath: function () {
-            return '../../' + question.imageFilePath;
+        watch: {
+          isSoundTurnOn: function (newIsSoundTurnOn, oldIsSoundTurnOn) {
+            if (newIsSoundTurnOn) {
+              console.log(this.sound);
+              this.sound.load();
+              this.sound.play();
+            }
           }
+        },
+        mounted() {
+          this.sound = document.getElementById("sound");
         }
     }
 </script>
@@ -36,11 +51,6 @@
   .img-style {
     max-width: 1000px;
     max-height: 800px;
-  }
-  .shadow {
-    -webkit-box-shadow: 4px 4px 9px 0px rgba(50, 50, 50, 0.55);
-    -moz-box-shadow: 4px 4px 9px 0px rgba(50, 50, 50, 0.55);
-    box-shadow: 4px 4px 9px 0px rgba(50, 50, 50, 0.55);
   }
   #image-container {
     width: 70%;
@@ -51,8 +61,8 @@
     margin-top: 20px;
     width: 70%;
     font-size: 2.5em;
-    background-color: #6898f4;
-    border: 2px solid #efefef;
+    background-color: #f49f66;
+    border: 2px solid #d1885a;
     border-radius: 6px
   }
   #quiz-monitor {
