@@ -5,39 +5,37 @@
 </template>
 
 <script>
+    import Bus from '../../Bus';
+
     export default {
-        name: "timer",
-        props: ['timeNeededSec', 'isTimerActive'],
-        data() {
-          return {
-            timeSec: 0
-          }
-        },
-        methods: {
-          countDownTime: function() {
-            let self = this;
-            setInterval(function() {
-              if (self.timeSec > 0 ) {
-                self.timeSec--;
-              }
-            }, 1000);
-          }
-        },
-      watch: {
-        isTimerActive: function (newIsActive, oldIsActive) {
-          console.log("asdfd");
-          if (newIsActive) {
-            this.countDownTime();
-          }
+      name: "timer",
+      props: ['timeNeededSec'],
+      data() {
+        return {
+          timeSec: 0
         }
       },
-      computed: {
-          timer: function () {
-            return this.timeNeededSec;
-          }
+      methods: {
+        countDownTime: function () {
+          let intervalId = setInterval(() => {
+            this.timeSec--;
+            if (this.timeSec <= 0) {
+              clearInterval(intervalId);
+            }
+          }, 1000);
+        }
       },
-      mounted() {
-          this.timeSec = this.timeNeededSec;
+      watch: {
+        timeNeededSec: function (newTimeNeededSec, oldTimeNeededSec) {
+          this.timeSec = newTimeNeededSec;
+        }
+      },
+      created() {
+        this.timeSec = this.timeNeededSec;
+
+        Bus.bus.$on('activate-timer', () => {
+          this.countDownTime();
+        });
       }
     }
 </script>

@@ -7,17 +7,17 @@
 
       <div id="control-board">
         <div class="flex-row">
-          <button class="btn-style" v-on:click="sendCommand(commands.load)">Load Quiz</button>
+          <button class="btn-style" v-on:click="sendCommand(commands.LOAD)">Load Quiz</button>
         </div>
         <div class="flex-row">
-          <button class="btn-style" v-on:click="sendCommand(commands.turnSound)">Turn On Prekol 8==0</button>
+          <button class="btn-style" v-on:click="sendCommand(commands.TURN_SOUND)">Turn On Prekol 8==0</button>
         </div>
         <div class="flex-row">
-          <button class="btn-style" v-on:click="sendCommand(commands.start)">Start</button>
+          <button class="btn-style" v-on:click="sendCommand(commands.START)">Start</button>
         </div>
         <div class="flex-row">
-          <button class="btn-style" v-on:click="sendCommand(commands.prev)">← Prev</button>
-          <button class="btn-style" v-on:click="sendCommand(commands.next)">Next →</button>
+          <button class="btn-style" v-on:click="sendCommand(commands.PREV)">← Prev</button>
+          <button class="btn-style" v-on:click="sendCommand(commands.NEXT)">Next →</button>
         </div>
       </div>
     </div>
@@ -38,11 +38,11 @@
     data() {
       return {
         commands: {
-          load: 'LOAD',
-          next: 'NEXT',
-          prev: 'PREV',
-          start: 'START',
-          turnSound: 'TURN_SOUND'
+          LOAD: 'LOAD',
+          NEXT: 'NEXT',
+          PREV: 'PREV',
+          START: 'START',
+          TURN_SOUND: 'TURN_SOUND'
         },
         send_message: null,
         isConnected: false,
@@ -59,9 +59,7 @@
         this.stompClient.connect(
           {},
           frame => {
-            console.log(frame);
             this.isConnected = true;
-            // this.subscribeOnCommand();
           },
           error => {
             console.log(error);

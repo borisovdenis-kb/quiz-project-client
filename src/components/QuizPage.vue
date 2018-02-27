@@ -3,11 +3,7 @@
       <app-header v-bind:is-connected="isConnected"></app-header>
 
       <template v-if="questionList.length > 0">
-        <question
-          v-bind:question="currentQuestion"
-          v-bind:is-timer-active="isTimerActive"
-          v-bind:is-sound-turn-on="isSoundTurnOn">
-        </question>
+        <question v-bind:question="currentQuestion"></question>
       </template>
       <template v-else>
         <h2>Игра скоро начнется...</h2>
@@ -21,6 +17,7 @@
     import Stomp from 'stompjs';
     import AppHeader from "./AppHeader";
     import Question from "./questions/Question";
+    import Bus from "../Bus";
 
     export default {
       components: {
@@ -31,15 +28,13 @@
       data() {
         return {
           commands: {
-            load: 'LOAD',
-            next: 'NEXT',
-            prev: 'PREV',
-            start: 'START',
-            turnSound: 'TURN_SOUND'
+            LOAD: 'LOAD',
+            NEXT: 'NEXT',
+            PREV: 'PREV',
+            START: 'START',
+            TURN_SOUND: 'TURN_SOUND'
           },
-          isTimerActive: false,
           isConnected: false,
-          isSoundTurnOn: false,
           questionList: [],
           currentQuestionIndex: 0
         };
@@ -50,16 +45,16 @@
             let message = JSON.parse(frame.body);
             let command = message.command;
 
-            if (command === this.commands.load) {
+            if (command === this.commands.LOAD) {
               if (this.questionList.length === 0) {
                 this.questionList = JSON.parse(frame.body).content;
               }
-            } else if (command === this.commands.next || command === this.commands.prev) {
+            } else if (command === this.commands.NEXT || command === this.commands.PREV) {
               this.changeIndex(message.command);
-            } else if (command === this.commands.start) {
-              this.isTimerActive = true;
-            } else if (command === this.commands.turnSound) {
-              this.isSoundTurnOn = true;
+            } else if (command === this.commands.START) {
+              Bus.bus.$emit('activate-timer');
+            } else if (command === this.commands.TURN_SOUND) {
+              Bus.bus.$emit('turn-on-sound');
             }
           });
         },
@@ -79,9 +74,9 @@
           );
         },
         changeIndex(command) {
-          if (command === this.commands.next && this.currentQuestionIndex < this.questionList.length - 1) {
+          if (command === this.commands.NEXT && this.currentQuestionIndex < this.questionList.length - 1) {
             this.currentQuestionIndex++;
-          } else if (command === this.commands.prev && this.currentQuestionIndex > 0) {
+          } else if (command === this.commands.PREV && this.currentQuestionIndex > 0) {
             this.currentQuestionIndex--;
           }
         }

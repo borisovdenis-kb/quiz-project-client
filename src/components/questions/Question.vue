@@ -3,10 +3,7 @@
 
       <h1>Раунд {{ question.roundNumber }}</h1>
 
-      <timer
-        v-bind:time-needed-sec="question.timeNeededSec"
-        v-bind:is-timer-active="isTimerActive"
-      ></timer>
+      <timer v-bind:time-needed-sec="question.timeNeededSec"></timer>
 
       <div id="image-container">
         <img class="img-style" v-bind:src="question.imageFilePath"/>
@@ -22,28 +19,31 @@
 
 <script>
     import Timer from "./Timer";
+    import Bus from "../../Bus";
 
     export default {
-        components: {Timer},
-        name: "question",
-        props: ['question', 'isTimerActive', 'isSoundTurnOn'],
-        data() {
-          return {
-            sound: null
-          }
-        },
-        watch: {
-          isSoundTurnOn: function (newIsSoundTurnOn, oldIsSoundTurnOn) {
-            if (newIsSoundTurnOn) {
-              console.log(this.sound);
-              this.sound.load();
-              this.sound.play();
-            }
-          }
-        },
-        mounted() {
-          this.sound = document.getElementById("sound");
+      components: {Timer},
+      name: "question",
+      props: ['question'],
+      data() {
+        return {
+          sound: null
         }
+      },
+      methods: {
+        turnOnSound() {
+          this.sound.load();
+          this.sound.play();
+        }
+      },
+      mounted() {
+        this.sound = document.getElementById("sound");
+      },
+      created() {
+        Bus.bus.$on('turn-on-sound', () => {
+          this.turnOnSound();
+        })
+      }
     }
 </script>
 
