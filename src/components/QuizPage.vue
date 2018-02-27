@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="quiz-page" v-bind:class="{ 'time-is-over': isTimeOver }">
       <app-header v-bind:is-connected="isConnected"></app-header>
 
       <template v-if="questionList.length > 0">
@@ -8,7 +8,6 @@
       <template v-else>
         <h2>Игра скоро начнется...</h2>
       </template>
-
     </div>
 </template>
 
@@ -36,7 +35,8 @@
           },
           isConnected: false,
           questionList: [],
-          currentQuestionIndex: 0
+          currentQuestionIndex: 0,
+          isTimeOver: false,
         };
       },
       methods: {
@@ -88,10 +88,21 @@
       },
       mounted() {
         this.connectWSServer();
+      },
+      created() {
+        Bus.bus.$on('time-is-over', (isTimeOver) => {
+          this.isTimeOver = isTimeOver;
+        })
       }
     };
 </script>
 
 <style scoped>
-
+  #quiz-page {
+    width: 100%;
+    height: 100%;
+  }
+  .time-is-over {
+    background-color: #c74642;
+  }
 </style>

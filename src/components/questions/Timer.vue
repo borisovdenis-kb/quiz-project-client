@@ -21,6 +21,7 @@
             this.timeSec--;
             if (this.timeSec <= 0) {
               clearInterval(intervalId);
+              Bus.bus.$emit('time-is-over', true);
             }
           }, 1000);
         }
@@ -28,6 +29,7 @@
       watch: {
         timeNeededSec: function (newTimeNeededSec, oldTimeNeededSec) {
           this.timeSec = newTimeNeededSec;
+          Bus.bus.$emit('time-is-over', false);
         }
       },
       created() {

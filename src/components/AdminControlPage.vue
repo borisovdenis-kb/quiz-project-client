@@ -94,6 +94,7 @@
     border-radius: 4px;
     font-size: 1.3em;
     font-family: "Arial";
+    cursor: pointer;
   }
   #control-board {
     margin-top: 40px;

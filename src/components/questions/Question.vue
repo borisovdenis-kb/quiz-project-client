@@ -5,13 +5,18 @@
 
       <timer v-bind:time-needed-sec="question.timeNeededSec"></timer>
 
-      <div id="image-container">
-        <img class="img-style" v-bind:src="question.imageFilePath"/>
-      </div>
+      <template v-if="!isTimeOver">
+        <div id="image-container">
+          <img class="img-style" v-bind:src="question.imageFilePath"/>
+        </div>
 
-      <div id="question-text-container">
-        <span>{{ question.question }}</span>
-      </div>
+        <div id="question-text-container">
+          <span>{{ question.question }}</span>
+        </div>
+      </template>
+      <template v-else>
+        <h1>Время истекло.</h1>
+      </template>
 
       <audio id="sound" v-bind:src="question.soundFilePath"></audio>
     </div>
@@ -27,7 +32,8 @@
       props: ['question'],
       data() {
         return {
-          sound: null
+          sound: null,
+          isTimeOver: false
         }
       },
       methods: {
@@ -42,7 +48,11 @@
       created() {
         Bus.bus.$on('turn-on-sound', () => {
           this.turnOnSound();
-        })
+        });
+
+        Bus.bus.$on('time-is-over', (isTimeOver) => {
+          this.isTimeOver = isTimeOver;
+        });
       }
     }
 </script>
@@ -58,7 +68,7 @@
     border-radius: 6px
   }
   #question-text-container {
-    margin-top: 20px;
+    margin-top: 10px;
     width: 70%;
     font-size: 2.5em;
     background-color: #f49f66;
@@ -70,6 +80,5 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
   }
 </style>
