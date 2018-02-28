@@ -17,6 +17,7 @@
     import AppHeader from "./AppHeader";
     import Question from "./questions/Question";
     import Bus from "../Bus";
+    import {commands} from "../Common";
 
     export default {
       components: {
@@ -26,13 +27,6 @@
       name: "quiz-page",
       data() {
         return {
-          commands: {
-            LOAD: 'LOAD',
-            NEXT: 'NEXT',
-            PREV: 'PREV',
-            START: 'START',
-            TURN_SOUND: 'TURN_SOUND'
-          },
           isConnected: false,
           questionList: [],
           currentQuestionIndex: 0,
@@ -45,16 +39,18 @@
             let message = JSON.parse(frame.body);
             let command = message.command;
 
-            if (command === this.commands.LOAD) {
+            if (command === commands.LOAD) {
               if (this.questionList.length === 0) {
                 this.questionList = JSON.parse(frame.body).content;
               }
-            } else if (command === this.commands.NEXT || command === this.commands.PREV) {
+            } else if (command === commands.NEXT || command === commands.PREV) {
               this.changeIndex(message.command);
-            } else if (command === this.commands.START) {
+            } else if (command === commands.START) {
               Bus.bus.$emit('activate-timer');
-            } else if (command === this.commands.TURN_SOUND) {
+            } else if (command === commands.TURN_SOUND) {
               Bus.bus.$emit('turn-on-sound');
+            } else if (command === commands.TURN_FUNNY_STUFF) {
+              Bus.bus.$emit('turn-on-funny-staff');
             }
           });
         },
@@ -74,9 +70,9 @@
           );
         },
         changeIndex(command) {
-          if (command === this.commands.NEXT && this.currentQuestionIndex < this.questionList.length - 1) {
+          if (command === commands.NEXT && this.currentQuestionIndex < this.questionList.length - 1) {
             this.currentQuestionIndex++;
-          } else if (command === this.commands.PREV && this.currentQuestionIndex > 0) {
+          } else if (command === commands.PREV && this.currentQuestionIndex > 0) {
             this.currentQuestionIndex--;
           }
         }

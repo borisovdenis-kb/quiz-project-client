@@ -19,6 +19,7 @@
       </template>
 
       <audio id="sound" v-bind:src="question.soundFilePath"></audio>
+      <audio id="funny-staff" v-bind:src="question.funnyStuffFilePath"></audio>
     </div>
 </template>
 
@@ -33,21 +34,28 @@
       data() {
         return {
           sound: null,
+          funnyStaff: null,
           isTimeOver: false
         }
       },
       methods: {
-        turnOnSound() {
-          this.sound.load();
-          this.sound.play();
+        playAudio(element) {
+          console.log(element);
+          element.load();
+          element.play();
         }
       },
       mounted() {
         this.sound = document.getElementById("sound");
+        this.funnyStaff = document.getElementById("funny-staff");
       },
       created() {
         Bus.bus.$on('turn-on-sound', () => {
-          this.turnOnSound();
+          this.playAudio(this.sound);
+        });
+
+        Bus.bus.$on('turn-on-funny-staff', () => {
+          this.playAudio(this.funnyStaff);
         });
 
         Bus.bus.$on('time-is-over', (isTimeOver) => {

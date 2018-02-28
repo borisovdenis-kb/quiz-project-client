@@ -10,7 +10,10 @@
           <button class="btn-style" v-on:click="sendCommand(commands.LOAD)">Load Quiz</button>
         </div>
         <div class="flex-row">
-          <button class="btn-style" v-on:click="sendCommand(commands.TURN_SOUND)">Turn On Prekol 8==0</button>
+          <button class="btn-style" v-on:click="sendCommand(commands.TURN_SOUND)">Turn Sound</button>
+        </div>
+        <div class="flex-row">
+          <button class="btn-style" v-on:click="sendCommand(commands.TURN_FUNNY_STUFF)">Turn On Prekol 8==0</button>
         </div>
         <div class="flex-row">
           <button class="btn-style" v-on:click="sendCommand(commands.START)">Start</button>
@@ -29,6 +32,7 @@
   import SockJS from 'sockjs-client';
   import Stomp from 'stompjs';
   import AppHeader from "./AppHeader";
+  import {commands} from "../Common";
 
   export default {
     components: {
@@ -37,13 +41,7 @@
     name: "admin-control-page",
     data() {
       return {
-        commands: {
-          LOAD: 'LOAD',
-          NEXT: 'NEXT',
-          PREV: 'PREV',
-          START: 'START',
-          TURN_SOUND: 'TURN_SOUND'
-        },
+        commands: commands,
         send_message: null,
         isConnected: false,
         pageTitle: 'Admin Control'
