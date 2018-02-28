@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import AdminControlPage from '../components/AdminControlPage'
+import AdminControlPage from '../components/admin/AdminControlPage'
 import NavigationPage from '../components/NavigationPage'
-import QuizPage from '../components/QuizPage'
+import QuizPage from '../components/quiz/QuizPage'
 
 Vue.use(Router);
 

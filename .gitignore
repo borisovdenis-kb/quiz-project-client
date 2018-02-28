@@ -14,3 +14,4 @@ yarn-error.log*
 *.sln
 /static/image/
 /static/sound/
+/static/icons/

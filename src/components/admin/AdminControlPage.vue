@@ -16,6 +16,12 @@
           <button class="btn-style" v-on:click="sendCommand(commands.TURN_FUNNY_STUFF)">Turn On Prekol 8==0</button>
         </div>
         <div class="flex-row">
+          <audio-controller label="Sound"></audio-controller>
+        </div>
+        <div class="flex-row">
+          <audio-controller label="Prekol"></audio-controller>
+        </div>
+        <div class="flex-row">
           <button class="btn-style" v-on:click="sendCommand(commands.START)">Start</button>
         </div>
         <div class="flex-row">
@@ -31,11 +37,13 @@
 <script>
   import SockJS from 'sockjs-client';
   import Stomp from 'stompjs';
-  import AppHeader from "./AppHeader";
-  import {commands} from "../Common";
+  import AppHeader from "../AppHeader";
+  import {commands} from "../../Common";
+  import AudioController from "./AudioController";
 
   export default {
     components: {
+      AudioController,
       AppHeader
     },
     name: "admin-control-page",

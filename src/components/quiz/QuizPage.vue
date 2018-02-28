@@ -14,10 +14,10 @@
 <script>
     import SockJS from 'sockjs-client';
     import Stomp from 'stompjs';
-    import AppHeader from "./AppHeader";
-    import Question from "./questions/Question";
-    import Bus from "../Bus";
-    import {commands} from "../Common";
+    import AppHeader from "../AppHeader";
+    import Question from "./Question";
+    import Bus from "../../Bus";
+    import {commands} from "../../Common";
 
     export default {
       components: {

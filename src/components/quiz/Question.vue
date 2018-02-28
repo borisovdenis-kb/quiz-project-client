@@ -40,7 +40,6 @@
       },
       methods: {
         playAudio(element) {
-          console.log(element);
           element.load();
           element.play();
         }
