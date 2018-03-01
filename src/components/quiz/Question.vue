@@ -41,8 +41,11 @@
       },
       methods: {
         playAudio(element) {
-          element.load();
+          // element.load();
           element.play();
+        },
+        pauseAudio(element) {
+          element.pause();
         }
       },
       mounted() {
@@ -51,11 +54,18 @@
       },
       created() {
         Bus.bus.$on(globalEvents.playSound, (target) => {
-          console.log(target);
           if (target === 'sound') {
             this.playAudio(this.sound);
           } else if (target === 'funnyStuff') {
             this.playAudio(this.funnyStaff);
+          }
+        });
+
+        Bus.bus.$on(globalEvents.pauseSound, (target) => {
+          if (target === 'sound') {
+            this.pauseAudio(this.sound);
+          } else if (target === 'funnyStuff') {
+            this.pauseAudio(this.funnyStaff);
           }
         });
 

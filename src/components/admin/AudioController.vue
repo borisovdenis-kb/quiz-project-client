@@ -6,10 +6,10 @@
           <div class="volume-btn" style="margin-left: 2px">-</div>
 
           <template v-if="isPlay">
-            <div class="music-btn play-btn" v-on:click="emitEvent('play')"></div>
+            <div class="music-btn play-btn" v-on:click="handleEvent('play')"></div>
           </template>
           <template v-else>
-            <div class="music-btn pause-btn" v-on:click="emitEvent('pause')"></div>
+            <div class="music-btn pause-btn" v-on:click="handleEvent('pause')"></div>
           </template>
 
           <div class="volume-btn louder-btn" style="margin-right: 2px">+</div>
@@ -29,7 +29,8 @@
         }
       },
       methods: {
-        emitEvent(eventName) {
+        handleEvent(eventName) {
+          this.isPlay = !this.isPlay;
           this.$emit(`${eventName}-${this.clientTargetName}`);
         }
       }

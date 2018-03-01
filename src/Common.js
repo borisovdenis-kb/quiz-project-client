@@ -10,7 +10,8 @@ let commands = {
 let globalEvents = {
   activateTimer: 'activate-timer',
   timeIsOver: 'time-is-over',
-  playSound: 'play-sound'
+  playSound: 'play-sound',
+  pauseSound: 'pause-sound'
 };
 
 export {commands, globalEvents}
