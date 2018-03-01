@@ -6,6 +6,7 @@
 
 <script>
     import Bus from '../../Bus';
+    import {globalEvents} from "../../Common";
 
     export default {
       name: "timer",
@@ -21,7 +22,7 @@
             this.timeSec--;
             if (this.timeSec <= 0) {
               clearInterval(intervalId);
-              Bus.bus.$emit('time-is-over', true);
+              Bus.bus.$emit(globalEvents.timeIsOver, true);
             }
           }, 1000);
         }
@@ -29,13 +30,13 @@
       watch: {
         timeNeededSec: function (newTimeNeededSec, oldTimeNeededSec) {
           this.timeSec = newTimeNeededSec;
-          Bus.bus.$emit('time-is-over', false);
+          Bus.bus.$emit(globalEvents.timeIsOver, false);
         }
       },
       created() {
         this.timeSec = this.timeNeededSec;
 
-        Bus.bus.$on('activate-timer', () => {
+        Bus.bus.$on(globalEvents.activateTimer, () => {
           this.countDownTime();
         });
       }

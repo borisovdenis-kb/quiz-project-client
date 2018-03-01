@@ -6,10 +6,10 @@
           <div class="volume-btn" style="margin-left: 2px">-</div>
 
           <template v-if="isPlay">
-            <div class="music-btn play-btn" v-on:click=""></div>
+            <div class="music-btn play-btn" v-on:click="emitEvent('play')"></div>
           </template>
           <template v-else>
-            <div class="music-btn pause-btn"></div>
+            <div class="music-btn pause-btn" v-on:click="emitEvent('pause')"></div>
           </template>
 
           <div class="volume-btn louder-btn" style="margin-right: 2px">+</div>
@@ -22,10 +22,15 @@
 <script>
     export default {
       name: "audio-controller",
-      props: ['label'],
+      props: ['label', 'clientTargetName'],
       data() {
         return {
-          isPlay: false
+          isPlay: true
+        }
+      },
+      methods: {
+        emitEvent(eventName) {
+          this.$emit(`${eventName}-${this.clientTargetName}`);
         }
       }
     }

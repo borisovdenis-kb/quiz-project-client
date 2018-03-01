@@ -26,6 +26,7 @@
 <script>
     import Timer from "./Timer";
     import Bus from "../../Bus";
+    import {globalEvents} from "../../Common";
 
     export default {
       components: {Timer},
@@ -49,15 +50,16 @@
         this.funnyStaff = document.getElementById("funny-staff");
       },
       created() {
-        Bus.bus.$on('turn-on-sound', () => {
-          this.playAudio(this.sound);
+        Bus.bus.$on(globalEvents.playSound, (target) => {
+          console.log(target);
+          if (target === 'sound') {
+            this.playAudio(this.sound);
+          } else if (target === 'funnyStuff') {
+            this.playAudio(this.funnyStaff);
+          }
         });
 
-        Bus.bus.$on('turn-on-funny-staff', () => {
-          this.playAudio(this.funnyStaff);
-        });
-
-        Bus.bus.$on('time-is-over', (isTimeOver) => {
+        Bus.bus.$on(globalEvents.timeIsOver, (isTimeOver) => {
           this.isTimeOver = isTimeOver;
         });
       }

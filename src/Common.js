@@ -3,8 +3,14 @@ let commands = {
   NEXT: 'NEXT',
   PREV: 'PREV',
   START: 'START',
-  TURN_SOUND: 'TURN_SOUND',
-  TURN_FUNNY_STUFF: 'TURN_FUNNY_STUFF'
+  PLAY_SOUND: 'PLAY_SOUND',
+  PAUSE_SOUND: 'PAUSE_SOUND'
 };
 
-export {commands}
+let globalEvents = {
+  activateTimer: 'activate-timer',
+  timeIsOver: 'time-is-over',
+  playSound: 'play-sound'
+};
+
+export {commands, globalEvents}

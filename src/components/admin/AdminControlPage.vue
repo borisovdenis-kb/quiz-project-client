@@ -10,23 +10,27 @@
           <button class="btn-style" v-on:click="sendCommand(commands.LOAD)">Load Quiz</button>
         </div>
         <div class="flex-row">
-          <button class="btn-style" v-on:click="sendCommand(commands.TURN_SOUND)">Turn Sound</button>
-        </div>
-        <div class="flex-row">
-          <button class="btn-style" v-on:click="sendCommand(commands.TURN_FUNNY_STUFF)">Turn On Prekol 8==0</button>
-        </div>
-        <div class="flex-row">
-          <audio-controller label="Sound"></audio-controller>
-        </div>
-        <div class="flex-row">
-          <audio-controller label="Prekol"></audio-controller>
-        </div>
-        <div class="flex-row">
           <button class="btn-style" v-on:click="sendCommand(commands.START)">Start</button>
         </div>
         <div class="flex-row">
           <button class="btn-style" v-on:click="sendCommand(commands.PREV)">← Prev</button>
           <button class="btn-style" v-on:click="sendCommand(commands.NEXT)">Next →</button>
+        </div>
+        <div class="flex-row">
+          <audio-controller
+            label="Sound"
+            client-target-name="sound"
+            v-on:play-sound="sendCommand(commands.PLAY_SOUND, {target: 'sound'})"
+            v-on:pause-sound="sendCommand(commands.PAUSE_SOUND, {target: 'sound'})">
+          </audio-controller>
+        </div>
+        <div class="flex-row">
+          <audio-controller
+            label="Prekol"
+            client-target-name="funny-stuff"
+            v-on:play-funny-stuff="sendCommand(commands.PLAY_SOUND, {target: 'funnyStuff'})"
+            v-on:pause-funny-stuff="sendCommand(commands.PAUSE_SOUND, {target: 'funnyStuff'})">
+          </audio-controller>
         </div>
       </div>
     </div>
@@ -56,8 +60,9 @@
       };
     },
     methods: {
-      sendCommand(command) {
-        this.stompClient.send("/app/admin/getCommand", {}, JSON.stringify({command: command}));
+      sendCommand(commandName, metaInfo) {
+        let message = JSON.stringify({command: {name: commandName, metaInfo: metaInfo}});
+        this.stompClient.send("/app/admin/getCommand", {}, message);
       },
       connectWSServer() {
         this.ws = new SockJS("http://localhost:8080/app");

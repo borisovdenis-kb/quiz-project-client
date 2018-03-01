@@ -18,6 +18,7 @@
     import Question from "./Question";
     import Bus from "../../Bus";
     import {commands} from "../../Common";
+    import {globalEvents} from "../../Common";
 
     export default {
       components: {
@@ -37,20 +38,18 @@
         subscribeOnCommand() {
           this.stompClient.subscribe("/app/client/getCommand", frame => {
             let message = JSON.parse(frame.body);
-            let command = message.command;
+            let commandName = message.command.name;
 
-            if (command === commands.LOAD) {
+            if (commandName === commands.LOAD) {
               if (this.questionList.length === 0) {
                 this.questionList = JSON.parse(frame.body).content;
               }
-            } else if (command === commands.NEXT || command === commands.PREV) {
-              this.changeIndex(message.command);
-            } else if (command === commands.START) {
-              Bus.bus.$emit('activate-timer');
-            } else if (command === commands.TURN_SOUND) {
-              Bus.bus.$emit('turn-on-sound');
-            } else if (command === commands.TURN_FUNNY_STUFF) {
-              Bus.bus.$emit('turn-on-funny-staff');
+            } else if (commandName === commands.NEXT || commandName === commands.PREV) {
+              this.changeIndex(commandName);
+            } else if (commandName === commands.START) {
+              Bus.bus.$emit(globalEvents.activateTimer);
+            } else if (commandName === commands.PLAY_SOUND) {
+              Bus.bus.$emit(globalEvents.playSound, message.command.metaInfo.target);
             }
           });
         },
@@ -69,10 +68,10 @@
             }
           );
         },
-        changeIndex(command) {
-          if (command === commands.NEXT && this.currentQuestionIndex < this.questionList.length - 1) {
+        changeIndex(commandName) {
+          if (commandName === commands.NEXT && this.currentQuestionIndex < this.questionList.length - 1) {
             this.currentQuestionIndex++;
-          } else if (command === commands.PREV && this.currentQuestionIndex > 0) {
+          } else if (commandName === commands.PREV && this.currentQuestionIndex > 0) {
             this.currentQuestionIndex--;
           }
         }
@@ -86,7 +85,7 @@
         this.connectWSServer();
       },
       created() {
-        Bus.bus.$on('time-is-over', (isTimeOver) => {
+        Bus.bus.$on(globalEvents.timeIsOver, (isTimeOver) => {
           this.isTimeOver = isTimeOver;
         })
       }
