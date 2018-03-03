@@ -4,11 +4,11 @@
         <div id="controller">
 
           <div id="play-pause">
-            <div class="center" style="width: 40%">
+            <div class="center">
               <span>{{ label }}</span>
             </div>
 
-            <div class="center" style="width: 20%">
+            <div class="center">
               <template v-if="isPlay">
                 <div class="music-btn play-btn" v-on:click="playAudion()"></div>
               </template>
@@ -17,7 +17,7 @@
               </template>
             </div>
 
-            <div class="center" style="width: 40%">
+            <div class="center">
               <span>Vol: {{ volume }}</span>
             </div>
           </div>
@@ -116,6 +116,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-basis: calc(100% / 3);
   }
   .music-btn {
     display: flex;
@@ -151,6 +152,8 @@
   #play-pause {
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
     margin-top: 10px;
     width: 90%;
     height: 80%;

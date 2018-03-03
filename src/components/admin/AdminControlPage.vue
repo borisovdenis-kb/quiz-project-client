@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-container">
     <app-header v-bind:is-connected="isConnected"></app-header>
 
     <div id="flex-wrapper">
@@ -90,6 +90,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+  .page-container {
+    height: inherit;
+    background: #4077dc;
   }
   .flex-row {
     display: flex;

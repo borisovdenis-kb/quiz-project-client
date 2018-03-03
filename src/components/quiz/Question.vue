@@ -1,25 +1,30 @@
 <template>
     <div id="quiz-monitor">
+      <div class="quiz-monitor-container">
+        <h1>Раунд {{ question.roundNumber }}</h1>
 
-      <h1>Раунд {{ question.roundNumber }}</h1>
+        <timer v-bind:time-needed-sec="question.timeNeededSec"></timer>
 
-      <timer v-bind:time-needed-sec="question.timeNeededSec"></timer>
+        <template v-if="!isTimeOver">
+          <div id="image-container">
+            <div class="img-style"
+                 v-bind:style="{ 'background-image': 'url(' + question.imageFilePath + ')' }" >
+            </div>
+          </div>
 
-      <template v-if="!isTimeOver">
-        <div id="image-container">
-          <img class="img-style" v-bind:src="question.imageFilePath"/>
-        </div>
+          <div id="question-text-container">
+            <div class="question-wrap">
+              <span class="question-text">{{ question.question }}</span>
+            </div>
+          </div>
+        </template>
+        <template v-else>
+          <h1>Время истекло.</h1>
+        </template>
 
-        <div id="question-text-container">
-          <span>{{ question.question }}</span>
-        </div>
-      </template>
-      <template v-else>
-        <h1>Время истекло.</h1>
-      </template>
-
-      <audio id="sound" v-bind:src="question.soundFilePath"></audio>
-      <audio id="funny-staff" v-bind:src="question.funnyStuffFilePath"></audio>
+        <audio id="sound" v-bind:src="question.soundFilePath"></audio>
+        <audio id="funny-staff" v-bind:src="question.funnyStuffFilePath"></audio>
+      </div>
     </div>
 </template>
 
@@ -87,27 +92,55 @@
 </script>
 
 <style scoped>
+  .row {
+    flex-basis: 100%;
+  }
+  .quiz-monitor-container {
+    flex-grow: 1;
+    display: flex;
+    flex-flow: column;
+    width: 90%;
+    margin: 0 20px 0 20px;
+    padding: 0 20px 0 20px;
+    border-radius: 6px;
+    overflow: hidden;
+    /*background: #3d002d;*/
+  }
   .img-style {
-    max-width: 1000px;
-    max-height: 800px;
+    flex-grow: 1;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 5px solid #efefef;
+
   }
   #image-container {
-    width: 70%;
-    border: 2px solid #efefef;
-    border-radius: 6px
+    background: black;
+    display: flex;
+    flex-grow: 5;
+    justify-content: center;
+
   }
   #question-text-container {
+    width: 100%;
     margin-top: 10px;
-    width: 70%;
     font-size: 2.5em;
+    text-align: center;
+  }
+  .question-wrap {
+    flex-grow: 1;
+    margin-bottom: 75px;
     background-color: #f49f66;
     border: 2px solid #d1885a;
-    border-radius: 6px
+    border-radius: 6px;
+  }
+  .question-text {
   }
   #quiz-monitor {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: inherit;
   }
 </style>

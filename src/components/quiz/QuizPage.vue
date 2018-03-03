@@ -98,7 +98,8 @@
 
 <style scoped>
   #quiz-page {
-    width: 100%;
+    display: flex;
+    flex-flow: column;
     height: 100%;
   }
   .time-is-over {
