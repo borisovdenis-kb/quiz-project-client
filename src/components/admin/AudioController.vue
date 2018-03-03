@@ -19,14 +19,13 @@
 
             <div class="center" style="width: 40%">
               <span>Vol: {{ volume }}</span>
-              <span>volume: {{ metaInfo.volume }}</span>
             </div>
           </div>
 
           <vue-slider
             v-bind="sliderConfig"
             v-model="volume"
-            v-on:click="changeVolume()">
+            v-on:drag-end="changeVolume()">
           </vue-slider>
         </div>
       </div>
@@ -94,10 +93,8 @@
         },
         changeVolume() {
           let vol = this.volume / 100;
-          this.metaInfo.volume = parseInt(vol.toFixed());
-          setTimeout(() => {
-            this.sendCommand(commands.CHANGE_VOLUME, this.metaInfo);
-          }, 500);
+          this.$set(this.metaInfo, 'volume', vol);
+          this.sendCommand(commands.CHANGE_VOLUME, this.metaInfo);
         },
         playAudion() {
           this.isPlay = !this.isPlay;
@@ -106,11 +103,6 @@
         pauseAudio() {
           this.isPlay = !this.isPlay;
           this.sendCommand(commands.PAUSE_SOUND, this.metaInfo);
-        }
-      },
-      watch: {
-        volume: function (newVolume, oldVolume) {
-          this.changeVolume();
         }
       },
       mounted() {
