@@ -52,6 +52,8 @@
               Bus.bus.$emit(globalEvents.playSound, message.command.metaInfo.target);
             } else if (commandName === commands.PAUSE_SOUND) {
               Bus.bus.$emit(globalEvents.pauseSound, message.command.metaInfo.target);
+            } else if (commandName === commands.CHANGE_VOLUME) {
+              Bus.bus.$emit(globalEvents.changeVolume, message.command.metaInfo);
             }
           });
         },

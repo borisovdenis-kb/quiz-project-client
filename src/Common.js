@@ -4,14 +4,21 @@ let commands = {
   PREV: 'PREV',
   START: 'START',
   PLAY_SOUND: 'PLAY_SOUND',
-  PAUSE_SOUND: 'PAUSE_SOUND'
+  PAUSE_SOUND: 'PAUSE_SOUND',
+  CHANGE_VOLUME: 'CHANGE_VOLUME'
 };
 
 let globalEvents = {
   activateTimer: 'activate-timer',
   timeIsOver: 'time-is-over',
   playSound: 'play-sound',
-  pauseSound: 'pause-sound'
+  pauseSound: 'pause-sound',
+  changeVolume: 'change-volume'
 };
 
-export {commands, globalEvents}
+let soundTargetNames = {
+  sound: 'sound',
+  funnyStaff: 'funnyStuff'
+};
+
+export {commands, globalEvents, soundTargetNames}

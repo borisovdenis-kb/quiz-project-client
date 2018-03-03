@@ -19,17 +19,13 @@
         <div class="flex-row">
           <audio-controller
             label="Sound"
-            client-target-name="sound"
-            v-on:play-sound="sendCommand(commands.PLAY_SOUND, {target: 'sound'})"
-            v-on:pause-sound="sendCommand(commands.PAUSE_SOUND, {target: 'sound'})">
+            v-bind:target-name="targetNames.sound">
           </audio-controller>
         </div>
         <div class="flex-row">
           <audio-controller
             label="Prekol"
-            client-target-name="funny-stuff"
-            v-on:play-funny-stuff="sendCommand(commands.PLAY_SOUND, {target: 'funnyStuff'})"
-            v-on:pause-funny-stuff="sendCommand(commands.PAUSE_SOUND, {target: 'funnyStuff'})">
+            v-bind:target-name="targetNames.funnyStaff">
           </audio-controller>
         </div>
       </div>
@@ -42,7 +38,7 @@
   import SockJS from 'sockjs-client';
   import Stomp from 'stompjs';
   import AppHeader from "../AppHeader";
-  import {commands} from "../../Common";
+  import {commands, soundTargetNames} from "../../Common";
   import AudioController from "./AudioController";
 
   export default {
@@ -55,6 +51,7 @@
       return {
         commands: commands,
         send_message: null,
+        targetNames: null,
         isConnected: false,
         pageTitle: 'Admin Control'
       };
@@ -80,6 +77,9 @@
     },
     mounted() {
       this.connectWSServer();
+    },
+    created() {
+      this.targetNames = soundTargetNames;
     }
   };
 </script>

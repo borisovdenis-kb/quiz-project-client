@@ -13,7 +13,8 @@
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "sockjs-client": "latest",
-    "stompjs": "latest"
+    "stompjs": "latest",
+    "vue-slider-component": "latest"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

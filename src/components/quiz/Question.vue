@@ -26,7 +26,7 @@
 <script>
     import Timer from "./Timer";
     import Bus from "../../Bus";
-    import {globalEvents} from "../../Common";
+    import {globalEvents, soundTargetNames} from "../../Common";
 
     export default {
       components: {Timer},
@@ -40,12 +40,14 @@
         }
       },
       methods: {
-        playAudio(element) {
-          // element.load();
-          element.play();
+        playAudio(audioElement) {
+          audioElement.play();
         },
-        pauseAudio(element) {
-          element.pause();
+        pauseAudio(audioElement) {
+          audioElement.pause();
+        },
+        changeVolume(audioElement, newVolume) {
+          audioElement.volume = newVolume;
         }
       },
       mounted() {
@@ -54,18 +56,26 @@
       },
       created() {
         Bus.bus.$on(globalEvents.playSound, (target) => {
-          if (target === 'sound') {
+          if (target === soundTargetNames.sound) {
             this.playAudio(this.sound);
-          } else if (target === 'funnyStuff') {
+          } else if (target === soundTargetNames.funnyStaff) {
             this.playAudio(this.funnyStaff);
           }
         });
 
         Bus.bus.$on(globalEvents.pauseSound, (target) => {
-          if (target === 'sound') {
+          if (target === soundTargetNames.sound) {
             this.pauseAudio(this.sound);
-          } else if (target === 'funnyStuff') {
+          } else if (target === soundTargetNames.funnyStaff) {
             this.pauseAudio(this.funnyStaff);
+          }
+        });
+
+        Bus.bus.$on(globalEvents.changeVolume, (metaInfo) => {
+          if (metaInfo.target === soundTargetNames.sound) {
+            this.changeVolume(this.sound, metaInfo.volume);
+          } else if (target === soundTargetNames.funnyStaff) {
+            this.changeVolume(this.funnyStaff, metaInfo.volume);
           }
         });
 
