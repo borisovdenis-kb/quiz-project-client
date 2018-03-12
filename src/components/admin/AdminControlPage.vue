@@ -93,7 +93,6 @@
   }
   .page-container {
     height: inherit;
-    background: #4077dc;
   }
   .flex-row {
     display: flex;

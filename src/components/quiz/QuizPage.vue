@@ -30,7 +30,7 @@
         return {
           isConnected: false,
           questionList: [],
-          currentQuestionIndex: 0,
+          currentQuestionIndex: -1,
           isTimeOver: false,
         };
       },
@@ -42,7 +42,8 @@
 
             if (commandName === commands.LOAD) {
               if (this.questionList.length === 0) {
-                this.questionList = JSON.parse(frame.body).content;
+                this.currentQuestionIndex = 0;
+                this.questionList = JSON.parse(frame.body).questionList; // TODO: refactor parse 2 times
               }
             } else if (commandName === commands.NEXT || commandName === commands.PREV) {
               this.changeIndex(commandName);
@@ -78,6 +79,15 @@
           } else if (commandName === commands.PREV && this.currentQuestionIndex > 0) {
             this.currentQuestionIndex--;
           }
+        }
+      },
+      watch: {
+        currentQuestionIndex: function (newQuestionIndex, oldQuestionIndex) {
+          this.stompClient.send(
+            "/app/quiz/getCurrentQuestion",
+            {},
+            JSON.stringify({questionList: [this.currentQuestion]})
+          );
         }
       },
       computed: {

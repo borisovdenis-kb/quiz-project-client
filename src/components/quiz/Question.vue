@@ -34,9 +34,9 @@
     import {globalEvents, soundTargetNames} from "../../Common";
 
     export default {
-      components: {Timer},
       name: "question",
       props: ['question'],
+      components: {Timer},
       data() {
         return {
           sound: null,
@@ -63,8 +63,10 @@
         Bus.bus.$on(globalEvents.playSound, (target) => {
           if (target === soundTargetNames.sound) {
             this.playAudio(this.sound);
+            console.log(this.sound);
           } else if (target === soundTargetNames.funnyStaff) {
             this.playAudio(this.funnyStaff);
+            console.log(this.funnyStaff);
           }
         });
 

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import AdminControlPage from '../components/admin/AdminControlPage'
 import NavigationPage from '../components/NavigationPage'
 import QuizPage from '../components/quiz/QuizPage'
+import PlayerPage from '../components/player/PlayerPage'
 
 Vue.use(Router);
 
@@ -23,6 +24,11 @@ export default new Router({
       path: '/quiz',
       name: 'QuizPage',
       component: QuizPage
+    },
+    {
+      path: '/player',
+      name: 'PlayerPage',
+      component: PlayerPage
     }
   ]
 })
