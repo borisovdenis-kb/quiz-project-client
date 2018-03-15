@@ -2,8 +2,12 @@
     <div id="quiz-page" v-bind:class="{ 'time-is-over': isTimeOver }">
       <app-header v-bind:is-connected="isConnected"></app-header>
 
-      <template v-if="questionList.length > 0">
-        <question v-bind:question="currentQuestion"></question>
+      <template v-if="questions.length > 0">
+        <question
+          v-bind:question="currentQuestion"
+          v-bind:round-length="roundLength"
+          v-bind:current-question-index="currentQuestionIndex">
+        </question>
       </template>
       <template v-else>
         <h2>Игра скоро начнется...</h2>
@@ -29,9 +33,10 @@
       data() {
         return {
           isConnected: false,
-          questionList: [],
+          questions: [],
           currentQuestionIndex: -1,
-          isTimeOver: false,
+          roundIndex: 0,
+          isTimeOver: false
         };
       },
       methods: {
@@ -41,12 +46,12 @@
             let commandName = message.command.name;
 
             if (commandName === commands.LOAD) {
-              if (this.questionList.length === 0) {
+              if (this.questions.length === 0) {
                 this.currentQuestionIndex = 0;
-                this.questionList = JSON.parse(frame.body).questionList; // TODO: refactor parse 2 times
+                this.questions = message.questions;
               }
             } else if (commandName === commands.NEXT || commandName === commands.PREV) {
-              this.changeIndex(commandName);
+              this.changeAnswer(commandName);
             } else if (commandName === commands.START) {
               Bus.bus.$emit(globalEvents.activateTimer);
             } else if (commandName === commands.PLAY_SOUND) {
@@ -73,11 +78,25 @@
             }
           );
         },
-        changeIndex(commandName) {
-          if (commandName === commands.NEXT && this.currentQuestionIndex < this.questionList.length - 1) {
-            this.currentQuestionIndex++;
-          } else if (commandName === commands.PREV && this.currentQuestionIndex > 0) {
-            this.currentQuestionIndex--;
+        changeAnswer(command) {
+          if (command === commands.NEXT) {
+            if (this.currentQuestionIndex < this.questions[this.roundIndex].length - 1) {
+              this.currentQuestionIndex++;
+            } else {
+              if (this.roundIndex < this.questions.length - 1) {
+                this.roundIndex++;
+                this.currentQuestionIndex = 0;
+              }
+            }
+          } else {
+            if (this.currentQuestionIndex > 0) {
+              this.currentQuestionIndex--;
+            } else {
+              if (this.roundIndex > 0) {
+                this.roundIndex--;
+                this.currentQuestionIndex = this.questions[this.roundIndex].length - 1
+              }
+            }
           }
         }
       },
@@ -86,13 +105,16 @@
           this.stompClient.send(
             "/app/quiz/getCurrentQuestion",
             {},
-            JSON.stringify({questionList: [this.currentQuestion]})
+            JSON.stringify({question: this.currentQuestion})
           );
         }
       },
       computed: {
         currentQuestion: function () {
-          return this.questionList[this.currentQuestionIndex];
+          return this.questions[this.roundIndex][this.currentQuestionIndex];
+        },
+        roundLength: function() {
+          return this.questions[this.roundIndex].length;
         }
       },
       mounted() {

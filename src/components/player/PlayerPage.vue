@@ -34,10 +34,7 @@
     methods: {
       subscribeOnCommand() {
         this.stompClient.subscribe("/app/player/getCurrentQuestion", frame => {
-          let questionList = JSON.parse(frame.body).questionList;
-          if (questionList.length > 0) {
-            this.currentQuestion = questionList[0];
-          }
+          this.currentQuestion = JSON.parse(frame.body).question;
         });
       },
       connectWSServer() {
@@ -63,5 +60,7 @@
 </script>
 
 <style scoped>
-
+  #player-page {
+    height: 100%;
+  }
 </style>

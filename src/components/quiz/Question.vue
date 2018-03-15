@@ -3,6 +3,11 @@
       <div class="quiz-monitor-container">
         <h1>Раунд {{ question.roundNumber }}</h1>
 
+        <progress-bar
+          v-bind:current-step-index="currentQuestionIndex"
+          v-bind:steps-amount="roundLength">
+        </progress-bar>
+
         <timer v-bind:time-needed-sec="question.timeNeededSec"></timer>
 
         <template v-if="!isTimeOver">
@@ -32,11 +37,14 @@
     import Timer from "./Timer";
     import Bus from "../../Bus";
     import {globalEvents, soundTargetNames} from "../../Common";
+    import ProgressBar from "./ProgressBar";
 
     export default {
       name: "question",
-      props: ['question'],
-      components: {Timer},
+      props: ['question', 'roundLength', 'currentQuestionIndex'],
+      components: {
+        ProgressBar,
+        Timer},
       data() {
         return {
           sound: null,
