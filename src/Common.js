@@ -21,4 +21,6 @@ let soundTargetNames = {
   funnyStaff: 'funnyStuff'
 };
 
-export {commands, globalEvents, soundTargetNames}
+let restApiURL = 'http://localhost:8080/api';
+
+export {commands, globalEvents, soundTargetNames, restApiURL}
