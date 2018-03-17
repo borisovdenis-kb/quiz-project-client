@@ -1,5 +1,5 @@
 <template>
-    <div id="progress-bar">
+    <div id="stepper">
       <div id="steps-container">
         <div v-for="i in stepsAmount">
           <div class="step-block" v-bind:class="{ 'step-passed': isStepPassed(i - 1) }">
@@ -25,7 +25,7 @@
 
 <script>
   export default {
-    name: 'progress-bar',
+    name: 'stepper',
     props: ['stepsAmount', 'currentStepIndex'],
     data() {
       return {

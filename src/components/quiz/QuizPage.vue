@@ -88,7 +88,7 @@
                 this.currentQuestionIndex = 0;
               }
             }
-          } else {
+          } else if (command === commands.PREV) {
             if (this.currentQuestionIndex > 0) {
               this.currentQuestionIndex--;
             } else {
