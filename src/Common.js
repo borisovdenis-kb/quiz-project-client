@@ -13,7 +13,10 @@ let globalEvents = {
   timeIsOver: 'time-is-over',
   playSound: 'play-sound',
   pauseSound: 'pause-sound',
-  changeVolume: 'change-volume'
+  changeVolume: 'change-volume',
+  loadQuestions: 'load-questions',
+  nextQuestion: 'next-question',
+  prevQuestion: 'prev-question'
 };
 
 let soundTargetNames = {

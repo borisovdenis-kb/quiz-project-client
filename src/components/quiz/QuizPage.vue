@@ -2,11 +2,10 @@
     <div id="quiz-page" v-bind:class="{ 'time-is-over': isTimeOver }">
       <app-header v-bind:is-connected="isConnected"></app-header>
 
-      <template v-if="questions.length > 0">
+      <template v-if="isQuestionsLoaded">
         <question
-          v-bind:question="currentQuestion"
-          v-bind:round-length="roundLength"
-          v-bind:current-question-index="currentQuestionIndex">
+          v-bind:stomp-client="stompClient"
+          v-bind:questions="questions">
         </question>
       </template>
       <template v-else>
@@ -32,10 +31,8 @@
       name: "quiz-page",
       data() {
         return {
-          isConnected: false,
           questions: [],
-          currentQuestionIndex: -1,
-          roundIndex: 0,
+          isConnected: false,
           isTimeOver: false
         };
       },
@@ -46,12 +43,13 @@
             let commandName = message.command.name;
 
             if (commandName === commands.LOAD) {
-              if (this.questions.length === 0) {
-                this.currentQuestionIndex = 0;
+              if (!this.isQuestionsLoaded) {
                 this.questions = message.questions;
               }
-            } else if (commandName === commands.NEXT || commandName === commands.PREV) {
-              this.changeAnswer(commandName);
+            } else if (commandName === commands.NEXT) {
+              Bus.bus.$emit(globalEvents.nextQuestion);
+            } else if (commandName === commands.PREV) {
+              Bus.bus.$emit(globalEvents.prevQuestion);
             } else if (commandName === commands.START) {
               Bus.bus.$emit(globalEvents.activateTimer);
             } else if (commandName === commands.PLAY_SOUND) {
@@ -77,44 +75,11 @@
               console.log(error);
             }
           );
-        },
-        changeAnswer(command) {
-          if (command === commands.NEXT) {
-            if (this.currentQuestionIndex < this.questions[this.roundIndex].length - 1) {
-              this.currentQuestionIndex++;
-            } else {
-              if (this.roundIndex < this.questions.length - 1) {
-                this.roundIndex++;
-                this.currentQuestionIndex = 0;
-              }
-            }
-          } else if (command === commands.PREV) {
-            if (this.currentQuestionIndex > 0) {
-              this.currentQuestionIndex--;
-            } else {
-              if (this.roundIndex > 0) {
-                this.roundIndex--;
-                this.currentQuestionIndex = this.questions[this.roundIndex].length - 1
-              }
-            }
-          }
-        }
-      },
-      watch: {
-        currentQuestionIndex: function (newQuestionIndex, oldQuestionIndex) {
-          this.stompClient.send(
-            "/app/quiz/getCurrentQuestion",
-            {},
-            JSON.stringify({question: this.currentQuestion})
-          );
         }
       },
       computed: {
-        currentQuestion: function () {
-          return this.questions[this.roundIndex][this.currentQuestionIndex];
-        },
-        roundLength: function() {
-          return this.questions[this.roundIndex].length;
+        isQuestionsLoaded: function () {
+          return this.questions.length > 0;
         }
       },
       mounted() {
