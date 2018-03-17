@@ -19,13 +19,15 @@
         <div class="flex-row">
           <audio-controller
             label="Sound"
-            v-bind:target-name="targetNames.sound">
+            v-bind:target-name="targetNames.sound"
+            v-bind:stomp-client="stompClient">
           </audio-controller>
         </div>
         <div class="flex-row">
           <audio-controller
             label="Prekol"
-            v-bind:target-name="targetNames.funnyStaff">
+            v-bind:target-name="targetNames.funnyStaff"
+            v-bind:stomp-client="stompClient">
           </audio-controller>
         </div>
       </div>

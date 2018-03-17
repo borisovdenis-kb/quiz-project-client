@@ -33,14 +33,12 @@
 </template>
 
 <script>
-    import SockJS from 'sockjs-client';
-    import Stomp from 'stompjs';
     import {commands} from "../../Common";
     import vueSlider from 'vue-slider-component';
 
     export default {
       name: "audio-controller",
-      props: ['label', 'targetName'],
+      props: ['label', 'targetName', 'stompClient'],
       components: {vueSlider},
       data() {
         return {
@@ -87,10 +85,6 @@
           let message = JSON.stringify({command: {name: commandName, metaInfo: metaInfo}});
           this.stompClient.send("/app/admin/getCommand", {}, message);
         },
-        connectWSServer() {
-          this.ws = new SockJS("http://localhost:8080/app");
-          this.stompClient = Stomp.over(this.ws);
-        },
         changeVolume() {
           let vol = this.volume / 100;
           this.$set(this.metaInfo, 'volume', vol);
@@ -104,9 +98,6 @@
           this.isPlay = !this.isPlay;
           this.sendCommand(commands.PAUSE_SOUND, this.metaInfo);
         }
-      },
-      mounted() {
-        this.connectWSServer();
       }
     }
 </script>
