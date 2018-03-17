@@ -18,8 +18,11 @@
           </div>
 
           <div id="question-text-container">
-            <div class="question-wrap">
+            <div class="question-wrap" v-bind:class="{ 'opacity' : isAnswerVisible }">
               <span class="question-text">{{ currentQuestion.question }}</span>
+            </div>
+            <div class="answer-wrap" v-if="isAnswerVisible">
+              <span>{{ currentQuestion.rightAnswer }}</span>
             </div>
           </div>
         </template>
@@ -50,9 +53,10 @@
         return {
           sound: null,
           funnyStaff: null,
-          isTimeOver: false,
           currentQuestionIndex: -1,
-          roundIndex: 0
+          roundIndex: 0,
+          isTimeOver: false,
+          isAnswerVisible: false
         }
       },
       methods: {
@@ -84,6 +88,9 @@
               this.currentQuestionIndex = this.questions[this.roundIndex].length - 1
             }
           }
+        },
+        changeAnswerVisibility() {
+          this.isAnswerVisible = !this.isAnswerVisible;
         }
       },
       watch: {
@@ -111,11 +118,17 @@
         this.nextQuestion();
 
         Bus.bus.$on(globalEvents.nextQuestion, () => {
+          this.isAnswerVisible = false;
           this.nextQuestion();
         });
 
         Bus.bus.$on(globalEvents.prevQuestion, () => {
+          this.isAnswerVisible = false;
           this.prevQuestion();
+        });
+
+        Bus.bus.$on(globalEvents.showAnswer, () => {
+          this.changeAnswerVisibility(true);
         });
 
         Bus.bus.$on(globalEvents.playSound, (target) => {
@@ -164,7 +177,6 @@
     padding: 0 20px 0 20px;
     border-radius: 6px;
     overflow: hidden;
-    /*background: #3d002d;*/
   }
   .img-style {
     flex-grow: 1;
@@ -175,26 +187,32 @@
 
   }
   #image-container {
-    background: black;
     display: flex;
     flex-grow: 5;
     justify-content: center;
-
+    background: black;
   }
   #question-text-container {
     width: 100%;
     margin-top: 10px;
+    margin-bottom: 50px;
     font-size: 2.5em;
     text-align: center;
   }
   .question-wrap {
     flex-grow: 1;
-    margin-bottom: 75px;
     background-color: #f49f66;
     border: 2px solid #d1885a;
     border-radius: 6px;
   }
-  .question-text {
+  .answer-wrap {
+    margin-top: 10px;
+    background-color: #73aff4;
+    border: 2px solid #5b7fb6;
+    border-radius: 6px;
+  }
+  .opacity {
+    opacity: 0.2;
   }
   #quiz-monitor {
     display: flex;

@@ -50,6 +50,8 @@
               Bus.bus.$emit(globalEvents.nextQuestion);
             } else if (commandName === commands.PREV) {
               Bus.bus.$emit(globalEvents.prevQuestion);
+            } else if (commandName === commands.SHOW_ANSWER) {
+              Bus.bus.$emit(globalEvents.showAnswer);
             } else if (commandName === commands.START) {
               Bus.bus.$emit(globalEvents.activateTimer);
             } else if (commandName === commands.PLAY_SOUND) {

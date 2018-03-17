@@ -13,6 +13,9 @@
           <button class="btn-style" v-on:click="sendCommand(commands.START)">Start</button>
         </div>
         <div class="flex-row">
+          <button class="btn-style" v-on:click="sendCommand(commands.SHOW_ANSWER)">Show Answer</button>
+        </div>
+        <div class="flex-row">
           <button class="btn-style" v-on:click="sendCommand(commands.PREV)">← Prev</button>
           <button class="btn-style" v-on:click="sendCommand(commands.NEXT)">Next →</button>
         </div>
@@ -54,6 +57,7 @@
         commands: commands,
         send_message: null,
         targetNames: null,
+        stompClient: null,
         isConnected: false,
         pageTitle: 'Admin Control'
       };
