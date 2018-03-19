@@ -26,6 +26,12 @@ let soundTargetNames = {
   funnyStaff: 'funnyStuff'
 };
 
+let answerStatuses = {
+  not_resolved: 'NOT_RESOLVED',
+  right: 'RIGHT',
+  wrong: 'WRONG'
+};
+
 let restApiURL = 'http://localhost:8080/api';
 
-export {commands, globalEvents, soundTargetNames, restApiURL}
+export {commands, globalEvents, soundTargetNames, restApiURL, answerStatuses}

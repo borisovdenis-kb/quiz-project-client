@@ -1,6 +1,6 @@
 <template>
   <div id="header">
-    <connection-indicator v-bind:is-connected="isConnected"></connection-indicator>
+    <connection-indicator v-if="isConnected != null" v-bind:is-connected="isConnected"></connection-indicator>
   </div>
 </template>
 
@@ -21,5 +21,7 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    height: 35px;
+    background-color: #6675d6;
   }
 </style>

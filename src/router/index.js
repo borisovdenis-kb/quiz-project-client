@@ -22,7 +22,7 @@ export default new Router({
       component: AdminControlPage
     },
     {
-      path: 'admin/answerResolver',
+      path: '/answerResolver',
       name: 'AnswerResolverPage',
       component: AnswerResolverPage
     },
