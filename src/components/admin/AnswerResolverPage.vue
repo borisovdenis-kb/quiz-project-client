@@ -3,56 +3,70 @@
     <app-header></app-header>
 
     <div id="main-container">
-      <div id="container">
-        <div v-for="(playerAnswers, playerName)  in answersGroupedByPlayers">
-          <div class="resolver-for-player-header">
-            <span>{{ playerName }}</span>
-          </div>
 
-          <div class="answers-container">
-            <div class="row column-names">
-              <div class="column question-cell">
-                <span>Вопрос</span>
-              </div>
-              <div class="column player-answer-cell">
-                <span>Ответ Команды</span>
-              </div>
-              <div class="column right-answer-cell">
-                <span>Правильный ответ</span>
-              </div>
+      <template v-if="!isAnswersEmpty">
+        <div id="container">
+          <div v-for="(playerAnswers, playerName)  in answersGroupedByPlayers">
+            <div class="resolver-for-player-header">
+              <span>{{ playerName }}</span>
             </div>
 
-            <div class="row" v-for="item in playerAnswers">
-              <div class="column question-cell">
-                <span>{{ item.question }}</span>
-              </div>
-              <div class="column player-answer-cell">
-                <span>{{ item.rightAnswer }}</span>
-              </div>
-              <div class="column right-answer-cell">
-                <span>{{ item.answer }}</span>
-              </div>
-              <div class="column answer-status-cell">
-                <div class="status-button status-button-not-resolved"
-                     v-bind:class="{ 'selected' : item.status === statuses.not_resolved }"
-                     v-on:click="setAnswerStatus(item.answer, statuses.not_resolved)">
-                  ?
+            <div class="answers-container">
+              <div class="row column-names">
+                <div class="column question-cell">
+                  <span>Вопрос</span>
                 </div>
-                <div class="status-button status-button-right"
-                     v-bind:class="{ 'selected' : item.status === statuses.right }"
-                     v-on:click="setAnswerStatus(item.answer, statuses.right)">
-                  yes
+                <div class="column player-answer-cell">
+                  <span>Ответ Команды</span>
                 </div>
-                <div class="status-button status-button-wrong"
-                     v-bind:class="{ 'selected' : item.status === statuses.wrong }"
-                     v-on:click="setAnswerStatus(item.answer, statuses.wrong)">
-                  no
+                <div class="column right-answer-cell">
+                  <span>Правильный ответ</span>
+                </div>
+              </div>
+
+              <div class="row" v-for="item in playerAnswers">
+                <div class="column question-cell">
+                  <span>{{ item.question.question }}</span>
+                </div>
+                <div class="column player-answer-cell">
+                  <span>{{ item.rightAnswer }}</span>
+                </div>
+                <div class="column right-answer-cell">
+                  <span>{{ item.answer }}</span>
+                </div>
+                <div class="column answer-status-cell">
+                  <div class="status-button status-button-not-resolved"
+                       v-bind:class="{ 'selected' : item.status === statuses.not_resolved }"
+                       v-on:click="setAnswerStatus(item, statuses.not_resolved)">
+                    ?
+                  </div>
+                  <div class="status-button status-button-right"
+                       v-bind:class="{ 'selected' : item.status === statuses.right }"
+                       v-on:click="setAnswerStatus(item, statuses.right)">
+                    yes
+                  </div>
+                  <div class="status-button status-button-wrong"
+                       v-bind:class="{ 'selected' : item.status === statuses.wrong }"
+                       v-on:click="setAnswerStatus(item, statuses.wrong)">
+                    no
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <div id="save-container">
+            <div id="save-button" v-on:click="updateAnswers()">Save</div>
+          </div>
+
+          <h3 v-if="isRequestFailed" style="color: red">Во время обновления списка вопросов возникла ошибка.</h3>
+
         </div>
-      </div>
+      </template>
+      <template v-else>
+        <h2>Сейчас нет ни одного вопроса, который нужно было бы решить...</h2>
+      </template>
+
     </div>
 
 
@@ -68,20 +82,50 @@
     name: "answer-resolver-page",
     data() {
       return {
-        answersGroupedByPlayers: [],
-        statuses: answerStatuses
+        answersGroupedByPlayers: {},
+        statuses: answerStatuses,
+        isRequestFailed: false
       }
     },
     methods: {
-      setAnswerStatus(answer, status) {
-        this.$set(answer, status);
-        console.log(this.answersGroupedByPlayers);
+      setAnswerStatus(item, status) {
+        this.$set(item, 'status', status);
+      },
+      convertAnswerDtoToAnswers(answerDtoList) {
+        return Object
+          .values(answerDtoList)
+          .reduce((x, y) => x.concat(y))
+          .map( (answerDto) => {
+            return {
+              id: answerDto.id,
+              questionId: answerDto.question.id,
+              playerId: answerDto.player.id,
+              answer: answerDto.answer,
+              status: answerDto.status
+            }
+          });
+      },
+      updateAnswers() {
+        let data = this.convertAnswerDtoToAnswers(this.answersGroupedByPlayers);
+
+        this.$http.put(`${restApiURL}/answers`, data).then(
+          response => {
+            window.location.reload();
+          },
+          error => {
+            this.isRequestFailed = true;
+          }
+        );
+      }
+    },
+    computed: {
+      isAnswersEmpty: function () {
+        return Object.keys(this.answersGroupedByPlayers).length === 0;
       }
     },
     created() {
       this.$http.get(`${restApiURL}/answers?status=NOT_RESOLVED`).then(
         response => {
-          console.log(response.data);
           this.answersGroupedByPlayers = response.data;
         },
         error => {
@@ -140,34 +184,38 @@
     align-items: center;
     border-right: 1px solid #d6d6d6;
   }
+  .column:last-child {
+    border-right: none;
+  }
   .column span {
     margin-left: 10px;
   }
   .question-cell {
-    width: 40%;
+    flex: 0 0 40%;
   }
   .player-answer-cell {
-    width: 22%;
+    flex: 0 0 22%;
   }
   .right-answer-cell {
-    width: 22%;
+    flex: 0 0 22%;
   }
   .answer-status-cell {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    width: 12%;
+    flex: 1 0 16%;
   }
   .status-button {
-    width: 30%;
+    width: 25%;
+    padding: 2px;
     background-color: cadetblue;
     cursor: pointer;
     border-radius: 2px;
-    transition: 0.3s ease-in-out;
+    opacity: 0.3;
   }
   .status-button-not-resolved {
-    background-color: #bebebe;
+    background-color: #9a9a9a;
   }
   .status-button-right {
     background-color: #40b559;
@@ -176,6 +224,27 @@
     background-color: #d36071;
   }
   .selected {
-    border: 2px solid #7a7a7a;
+    opacity: 1;
+  }
+  #save-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+  }
+  #save-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 30px;
+    background-color: #42b161;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+  }
+  #save-button:hover {
+    opacity: 0.7;
   }
 </style>
