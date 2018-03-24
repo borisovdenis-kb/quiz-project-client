@@ -59,7 +59,7 @@
   .step-block {
     display: flex;
     flex-direction: row;
-    background-color: #cecece;
+    background-color: #efefef;
   }
   .step-block-left-arrow {
     width: 0;
@@ -93,7 +93,7 @@
     border-left: 20px solid #33cb64;
   }
   .step-right-not-passed-border {
-    border-left: 20px solid #cecece;
+    border-left: 20px solid #efefef;
   }
   .step-passed {
     background-color: #33cb64;

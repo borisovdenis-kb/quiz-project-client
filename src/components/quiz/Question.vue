@@ -1,7 +1,9 @@
 <template>
     <div id="quiz-monitor">
       <div class="quiz-monitor-container">
-        <h1>Раунд {{ currentQuestion.roundNumber }}</h1>
+        <div id="round-container">
+          Раунд: <div id="round-name">{{ currentQuestion.roundName }}</div>
+        </div>
 
         <stepper
           v-bind:current-step-index="currentQuestionIndex"
@@ -185,6 +187,20 @@
     background-position: center;
     border: 5px solid #efefef;
 
+  }
+  #round-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 1.5em;
+  }
+  #round-name {
+    padding: 5px;
+    margin-left: 10px;
+    background-color: #e6e6e6;
+    border-radius: 4px;
   }
   #image-container {
     display: flex;
