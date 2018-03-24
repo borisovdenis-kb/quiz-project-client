@@ -29,10 +29,10 @@
                   <span>{{ item.question.question }}</span>
                 </div>
                 <div class="column player-answer-cell">
-                  <span>{{ item.rightAnswer }}</span>
+                  <span>{{ item.answer }}</span>
                 </div>
                 <div class="column right-answer-cell">
-                  <span>{{ item.answer }}</span>
+                  <span>{{ item.rightAnswer }}</span>
                 </div>
                 <div class="column answer-status-cell">
                   <div class="status-button status-button-not-resolved"
