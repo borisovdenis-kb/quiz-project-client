@@ -2,8 +2,15 @@
     <div id="answer-view">
       <div id="answer-container">
         <p>{{ question.question }}</p>
-        <div id="textarea-container">
-          <input v-model="answerText" placeholder="Введите ответ. Только без глупостей."/>
+        <div id="input-answer-container">
+
+          <template v-if="question.roundType === roundTypes.questionAnswer">
+            <question-answer-input ref="answerInput"></question-answer-input>
+          </template>
+          <template v-else>
+            <truth-or-lie-input ref="answerInput"></truth-or-lie-input>
+          </template>
+
         </div>
         <button class="btn-style" v-on:click="sendAnswer()">Отправить ответ</button>
       </div>
@@ -11,25 +18,39 @@
 </template>
 
 <script>
-  import {restApiURL} from "../../Common";
+  import TruthOrLieInput from "./TruthOrLieInput";
+  import QuestionAnswerInput from "./QuestionAnswerInput";
+  import {restApiURL, roundTypes} from "../../Common";
 
   export default {
+    components: {
+      QuestionAnswerInput,
+      TruthOrLieInput},
     name: "answer-view",
     props: ['question'],
     data() {
       return {
-        answerText: '',
         answer: {
           playerId: 1,
-          questionId: this.question.id,
-          answer: this.answerText
-        }
+          questionId: '',
+          answer: ''
+        },
+        roundTypes: roundTypes
       }
     },
     methods: {
       sendAnswer() {
+        this.answer.answer = this.$refs.answerInput.getAnswer();
+        this.answer.questionId = this.question.id;
+        console.log(this.answer);
+        this.$http.post(`${restApiURL}/answers`, this.answer);
       }
-    }
+    },
+    computed: {
+      currentAnswer: function () {
+        return this.$refs.answerInput.getAnswer();
+      }
+    },
   }
 </script>
 
@@ -59,7 +80,7 @@
     width: 90%;
     height: 90%;
   }
-  #textarea-container {
+  #input-answer-container {
     width: 100%;
   }
   input {

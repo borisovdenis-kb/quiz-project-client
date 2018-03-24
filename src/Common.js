@@ -32,6 +32,18 @@ let answerStatuses = {
   wrong: 'WRONG'
 };
 
+let roundTypes = {
+  questionAnswer: 'QUESTION_ANSWER',
+  truthOrLie: 'TRUTH_OR_LIE'
+};
+
 let restApiURL = 'http://localhost:8080/api';
 
-export {commands, globalEvents, soundTargetNames, restApiURL, answerStatuses}
+export {
+  commands,
+  globalEvents,
+  soundTargetNames,
+  restApiURL,
+  answerStatuses,
+  roundTypes
+}
