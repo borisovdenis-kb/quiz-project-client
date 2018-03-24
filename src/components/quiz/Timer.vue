@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="timer">
       <h3>Время: {{ timeSec }}</h3>
     </div>
 </template>

@@ -1,16 +1,24 @@
 <template>
     <div id="quiz-monitor">
       <div class="quiz-monitor-container">
-        <div id="round-container">
-          Раунд: <div id="round-name">{{ currentQuestion.roundName }}</div>
+
+
+        <div id="top-container">
+          <div id="round-container">
+            Раунд:<div id="round-name">{{ currentQuestion.roundName }}</div>
+          </div>
+
+          <div>
+            <timer v-bind:time-needed-sec="currentQuestion.timeNeededSec"></timer>
+          </div>
         </div>
 
-        <stepper
-          v-bind:current-step-index="currentQuestionIndex"
-          v-bind:steps-amount="roundLength">
-        </stepper>
-
-        <timer v-bind:time-needed-sec="currentQuestion.timeNeededSec"></timer>
+        <div id="stepper-container">
+          <stepper
+            v-bind:current-step-index="currentQuestionIndex"
+            v-bind:steps-amount="roundLength">
+          </stepper>
+        </div>
 
         <template v-if="!isTimeOver">
           <div id="image-container">
@@ -188,12 +196,17 @@
     border: 5px solid #efefef;
 
   }
-  #round-container {
+  #top-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 10px;
+  }
+  #round-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     font-size: 1.5em;
   }
   #round-name {
@@ -201,6 +214,10 @@
     margin-left: 10px;
     background-color: #e6e6e6;
     border-radius: 4px;
+  }
+  #stepper-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
   #image-container {
     display: flex;
