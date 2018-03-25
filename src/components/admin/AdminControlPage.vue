@@ -16,6 +16,9 @@
           <button class="btn-style" v-on:click="sendCommand(commands.SHOW_ANSWER)">Show Answer</button>
         </div>
         <div class="flex-row">
+          <button class="btn-style" v-on:click="sendCommand(commands.SHOW_PLAYERS_ANSWERS, null, currentQuestion)">Show Player's Answers</button>
+        </div>
+        <div class="flex-row">
           <button class="btn-style" v-on:click="sendCommand(commands.PREV)">← Prev</button>
           <button class="btn-style" v-on:click="sendCommand(commands.NEXT)">Next →</button>
         </div>
@@ -58,22 +61,43 @@
         send_message: null,
         targetNames: null,
         stompClient: null,
+        currentQuestion: null,
         isConnected: false,
         pageTitle: 'Admin Control'
       };
     },
     methods: {
-      sendCommand(commandName, metaInfo) {
-        let message = JSON.stringify({command: {name: commandName, metaInfo: metaInfo}});
-        this.stompClient.send("/app/admin/getCommand", {}, message);
+      sendCommand(commandName, metaInfo, content) {
+        let message = {
+          command: {
+            name: commandName,
+            metaInfo: metaInfo
+          },
+          content: content
+        };
+        let endPointUrl = '/app/admin/command';
+
+        if (commandName === commands.LOAD) {
+          endPointUrl += '/load';
+        } else if (commandName === commands.SHOW_PLAYERS_ANSWERS) {
+          endPointUrl += '/show_players_answers';
+        }
+
+        this.stompClient.send(endPointUrl, {}, JSON.stringify(message));
+      },
+      subscribeOnGetCurrentQuestion() {
+        this.stompClient.subscribe('/app/player/getCurrentQuestion', frame => {
+          this.currentQuestion = JSON.parse(frame.body).content;
+        });
       },
       connectWSServer() {
-        this.ws = new SockJS("http://localhost:8080/app");
+        this.ws = new SockJS('http://localhost:8080/app');
         this.stompClient = Stomp.over(this.ws);
         this.stompClient.connect(
           {},
           frame => {
             this.isConnected = true;
+            this.subscribeOnGetCurrentQuestion();
           },
           error => {
             console.log(error);

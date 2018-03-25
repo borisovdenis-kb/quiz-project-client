@@ -1,14 +1,14 @@
 <template>
   <div id="player-page">
     <app-header v-bind:is-connected="isConnected"></app-header>
-    <!--<component v-bind:is="currentAnswerView" v-if="currentQuestion">-->
-    <!--</component>-->
+
     <template v-if="currentQuestion">
       <answer-view v-bind:question="currentQuestion"></answer-view>
     </template>
     <template v-else>
       <h2>Игра скоро начнется...</h2>
     </template>
+
   </div>
 </template>
 
@@ -27,14 +27,13 @@
     data() {
       return {
         currentQuestion: null,
-        isConnected: false,
-        // currentAnswerView: AnswerView,
+        isConnected: false
       }
     },
     methods: {
-      subscribeOnCommand() {
+      subscribeOnGetCurrentQuestion() {
         this.stompClient.subscribe("/app/player/getCurrentQuestion", frame => {
-          this.currentQuestion = JSON.parse(frame.body).question;
+          this.currentQuestion = JSON.parse(frame.body).content;
         });
       },
       connectWSServer() {
@@ -45,7 +44,7 @@
           frame => {
             console.log(frame);
             this.isConnected = true;
-            this.subscribeOnCommand();
+            this.subscribeOnGetCurrentQuestion();
           },
           error => {
             console.log(error);

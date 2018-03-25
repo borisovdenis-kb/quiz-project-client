@@ -37,14 +37,14 @@
         };
       },
       methods: {
-        subscribeOnCommand() {
+        subscribeOnGetCurrentQuestion() {
           this.stompClient.subscribe("/app/client/getCommand", frame => {
             let message = JSON.parse(frame.body);
             let commandName = message.command.name;
 
             if (commandName === commands.LOAD) {
               if (!this.isQuestionsLoaded) {
-                this.questions = message.questions;
+                this.questions = message.content;
               }
             } else if (commandName === commands.NEXT) {
               Bus.bus.$emit(globalEvents.nextQuestion);
@@ -52,6 +52,8 @@
               Bus.bus.$emit(globalEvents.prevQuestion);
             } else if (commandName === commands.SHOW_ANSWER) {
               Bus.bus.$emit(globalEvents.showAnswer);
+            } else if (commandName === commands.SHOW_PLAYERS_ANSWERS) {
+              Bus.bus.$emit(globalEvents.showPlayersAnswers, message.content);
             } else if (commandName === commands.START) {
               Bus.bus.$emit(globalEvents.activateTimer);
             } else if (commandName === commands.PLAY_SOUND) {
@@ -71,7 +73,7 @@
             frame => {
               console.log(frame);
               this.isConnected = true;
-              this.subscribeOnCommand();
+              this.subscribeOnGetCurrentQuestion();
             },
             error => {
               console.log(error);

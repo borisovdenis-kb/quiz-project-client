@@ -11,7 +11,7 @@
         <div class="top-container-col top-container-col--middle">
           <div id="round-container">
             Раунд:
-            <div id="round-name">{{ currentQuestion.roundName }}</div>
+            <div class="badge">{{ currentQuestion.roundName }}</div>
           </div>
         </div>
 
@@ -37,11 +37,22 @@
         </div>
 
         <div id="question-text-container">
-          <div class="question-wrap" v-bind:class="{ 'opacity' : isAnswerVisible }">
+          <div class="question-wrap" v-bind:class="{ 'opacity' : isAnswerVisible || isPlayersAnswersVisible }">
             <span class="question-text">{{ currentQuestion.question }}</span>
           </div>
-          <div class="answer-wrap" v-if="isAnswerVisible">
+
+          <div class="answer-wrap" v-if="isAnswerVisible" v-bind:class="{ 'opacity' : isPlayersAnswersVisible }">
             <span>{{ currentQuestion.rightAnswer }}</span>
+          </div>
+
+          <div id="players-answers-container" v-if="isPlayersAnswersVisible">
+            <div class="player-answer" v-for="(answer, playerName) in playersAnswers">
+              <div>{{ playerName }}:
+                <div class="badge" v-bind:class="playerAnswerExtraStyles(answer)">
+                  {{ answer.answer }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </template>
@@ -58,7 +69,7 @@
 <script>
   import Timer from "./Timer";
   import Bus from "../../Bus";
-  import {globalEvents, soundTargetNames} from "../../Common";
+  import {globalEvents, soundTargetNames, answerStatuses} from "../../Common";
   import Stepper from "./Stepper";
 
   export default {
@@ -72,10 +83,12 @@
       return {
         sound: null,
         funnyStaff: null,
+        playersAnswers: {},
         currentQuestionIndex: -1,
         roundIndex: 0,
         isTimeOver: false,
-        isAnswerVisible: false
+        isAnswerVisible: false,
+        isPlayersAnswersVisible: false
       }
     },
     methods: {
@@ -110,6 +123,20 @@
       },
       changeAnswerVisibility() {
         this.isAnswerVisible = !this.isAnswerVisible;
+      },
+      changePlayersAnswersVisibility() {
+        this.isPlayersAnswersVisible = !this.isPlayersAnswersVisible;
+      },
+      playerAnswerExtraStyles(answer) {
+        return {
+          'player-answer-right': answer.status === answerStatuses.right,
+          'player-answer-wrong': answer.status === answerStatuses.wrong
+        }
+      },
+      resetAllFlags() {
+        this.isTimeOver = false;
+        this.isAnswerVisible = false;
+        this.isPlayersAnswersVisible = false;
       }
     },
     watch: {
@@ -117,7 +144,7 @@
         this.stompClient.send(
           "/app/quiz/getCurrentQuestion",
           {},
-          JSON.stringify({question: this.currentQuestion})
+          JSON.stringify({content: this.currentQuestion})
         );
       }
     },
@@ -137,17 +164,22 @@
       this.nextQuestion();
 
       Bus.bus.$on(globalEvents.nextQuestion, () => {
-        this.isAnswerVisible = false;
+        this.resetAllFlags();
         this.nextQuestion();
       });
 
       Bus.bus.$on(globalEvents.prevQuestion, () => {
-        this.isAnswerVisible = false;
+        this.resetAllFlags();
         this.prevQuestion();
       });
 
       Bus.bus.$on(globalEvents.showAnswer, () => {
-        this.changeAnswerVisibility(true);
+        this.changeAnswerVisibility();
+      });
+
+      Bus.bus.$on(globalEvents.showPlayersAnswers, (playersAnswers) => {
+        this.playersAnswers = playersAnswers;
+        this.changePlayersAnswersVisibility();
       });
 
       Bus.bus.$on(globalEvents.playSound, (target) => {
@@ -223,7 +255,7 @@
     font-size: 1.5em;
   }
 
-  #round-name {
+  .badge {
     padding: 5px;
     margin-left: 10px;
     background-color: #e6e6e6;
@@ -252,20 +284,25 @@
     font-size: 2.5em;
     text-align: center;
   }
+
   .top-container-col {
     display: flex;
   }
+
   .top-container-col--first {
     flex: 0 0 150px;
   }
+
   .top-container-col--middle {
     justify-content: center;
     flex-grow: 1;
   }
+
   .top-container-col--last {
     flex: 0 0 150px;
     justify-content: flex-end;
   }
+
   .question-wrap {
     flex-grow: 1;
     background-color: #f49f66;
@@ -280,8 +317,32 @@
     border-radius: 6px;
   }
 
+  #players-answers-container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+  }
+
+  .player-answer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-right: 30px;
+    font-size: 0.6em;
+  }
+
+  .player-answer-right {
+    background-color: rgba(75, 218, 134, 0.74);
+  }
+
+  .player-answer-wrong {
+    background-color: rgba(218, 99, 96, 0.75);
+  }
+
   .opacity {
-    opacity: 0.2;
+    opacity: 0.3;
   }
 
   #quiz-monitor {

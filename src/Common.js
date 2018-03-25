@@ -6,7 +6,8 @@ let commands = {
   PLAY_SOUND: 'PLAY_SOUND',
   PAUSE_SOUND: 'PAUSE_SOUND',
   CHANGE_VOLUME: 'CHANGE_VOLUME',
-  SHOW_ANSWER: 'SHOW_ANSWER'
+  SHOW_ANSWER: 'SHOW_ANSWER',
+  SHOW_PLAYERS_ANSWERS: 'SHOW_PLAYERS_ANSWERS'
 };
 
 let globalEvents = {
@@ -18,7 +19,8 @@ let globalEvents = {
   loadQuestions: 'load-questions',
   nextQuestion: 'next-question',
   prevQuestion: 'prev-question',
-  showAnswer: 'show-answer'
+  showAnswer: 'show-answer',
+  showPlayersAnswers: 'show-players-answers'
 };
 
 let soundTargetNames = {
