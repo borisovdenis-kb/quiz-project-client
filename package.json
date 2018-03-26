@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "chart.js": "^2.7.2",
+    "lodash": "^4.17.5",
     "sockjs-client": "latest",
     "stompjs": "latest",
     "vue": "^2.5.2",

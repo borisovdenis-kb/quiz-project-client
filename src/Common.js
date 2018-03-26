@@ -7,7 +7,8 @@ let commands = {
   PAUSE_SOUND: 'PAUSE_SOUND',
   CHANGE_VOLUME: 'CHANGE_VOLUME',
   SHOW_ANSWER: 'SHOW_ANSWER',
-  SHOW_PLAYERS_ANSWERS: 'SHOW_PLAYERS_ANSWERS'
+  SHOW_PLAYERS_ANSWERS: 'SHOW_PLAYERS_ANSWERS',
+  CALC_PLAYERS_SCORE: 'CALC_PLAYERS_SCORE'
 };
 
 let globalEvents = {
@@ -20,7 +21,8 @@ let globalEvents = {
   nextQuestion: 'next-question',
   prevQuestion: 'prev-question',
   showAnswer: 'show-answer',
-  showPlayersAnswers: 'show-players-answers'
+  showPlayersAnswers: 'show-players-answers',
+  calcPlayersScore: 'calc-players-score'
 };
 
 let soundTargetNames = {

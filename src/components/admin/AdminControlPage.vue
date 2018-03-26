@@ -19,6 +19,9 @@
           <button class="btn-style" v-on:click="sendCommand(commands.SHOW_PLAYERS_ANSWERS, null, currentQuestion)">Show Player's Answers</button>
         </div>
         <div class="flex-row">
+          <button class="btn-style" v-on:click="sendCommand(commands.CALC_PLAYERS_SCORE)">Calc Players Score</button>
+        </div>
+        <div class="flex-row">
           <button class="btn-style" v-on:click="sendCommand(commands.PREV)">← Prev</button>
           <button class="btn-style" v-on:click="sendCommand(commands.NEXT)">Next →</button>
         </div>
@@ -48,6 +51,7 @@
   import AppHeader from "../AppHeader";
   import {commands, soundTargetNames} from "../../Common";
   import AudioController from "./AudioController";
+  import _ from 'lodash';
 
   export default {
     components: {
@@ -75,13 +79,12 @@
           },
           content: content
         };
-        let endPointUrl = '/app/admin/command';
-
-        if (commandName === commands.LOAD) {
-          endPointUrl += '/load';
-        } else if (commandName === commands.SHOW_PLAYERS_ANSWERS) {
-          endPointUrl += '/show_players_answers';
-        }
+        let suffix = {
+          'LOAD': '/load',
+          'SHOW_PLAYERS_ANSWERS': '/show_players_answers',
+          'CALC_PLAYERS_SCORE': '/calc_players_score'
+        };
+        let endPointUrl = `/app/admin/command${_.get(suffix, commandName, '')}`;
 
         this.stompClient.send(endPointUrl, {}, JSON.stringify(message));
       },
