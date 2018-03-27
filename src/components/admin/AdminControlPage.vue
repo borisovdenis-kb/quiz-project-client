@@ -8,8 +8,6 @@
       <div id="control-board">
         <div class="flex-row">
           <button class="btn-style" v-on:click="sendCommand(commands.LOAD)">Load Quiz</button>
-        </div>
-        <div class="flex-row">
           <button class="btn-style" v-on:click="sendCommand(commands.START)">Start</button>
         </div>
         <div class="flex-row">
@@ -19,7 +17,10 @@
           <button class="btn-style" v-on:click="sendCommand(commands.SHOW_PLAYERS_ANSWERS, null, currentQuestion)">Show Player's Answers</button>
         </div>
         <div class="flex-row">
-          <button class="btn-style" v-on:click="sendCommand(commands.CALC_PLAYERS_SCORE)">Calc Players Score</button>
+          <button class="btn-style" v-on:click="sendCommand(commands.SHOW_PLAYERS_RESULTS)">Show Players Results</button>
+        </div>
+        <div class="flex-row">
+          <button class="btn-style" v-on:click="sendCommand(commands.CALC_PLAYERS_RESULTS)">Calc Players Results</button>
         </div>
         <div class="flex-row">
           <button class="btn-style" v-on:click="sendCommand(commands.PREV)">← Prev</button>
@@ -79,12 +80,12 @@
           },
           content: content
         };
-        let suffix = {
+        let urlSuffix = {
           'LOAD': '/load',
           'SHOW_PLAYERS_ANSWERS': '/show_players_answers',
-          'CALC_PLAYERS_SCORE': '/calc_players_score'
+          'CALC_PLAYERS_RESULTS': '/calc_players_results'
         };
-        let endPointUrl = `/app/admin/command${_.get(suffix, commandName, '')}`;
+        let endPointUrl = `/app/admin/command${_.get(urlSuffix, commandName, '')}`;
 
         this.stompClient.send(endPointUrl, {}, JSON.stringify(message));
       },

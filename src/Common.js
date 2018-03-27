@@ -8,7 +8,8 @@ let commands = {
   CHANGE_VOLUME: 'CHANGE_VOLUME',
   SHOW_ANSWER: 'SHOW_ANSWER',
   SHOW_PLAYERS_ANSWERS: 'SHOW_PLAYERS_ANSWERS',
-  CALC_PLAYERS_SCORE: 'CALC_PLAYERS_SCORE'
+  SHOW_PLAYERS_RESULTS: 'SHOW_PLAYERS_RESULTS',
+  CALC_PLAYERS_RESULTS: 'CALC_PLAYERS_RESULTS'
 };
 
 let globalEvents = {
@@ -22,6 +23,7 @@ let globalEvents = {
   prevQuestion: 'prev-question',
   showAnswer: 'show-answer',
   showPlayersAnswers: 'show-players-answers',
+  showPlayersResults: 'show-players-results',
   calcPlayersScore: 'calc-players-score'
 };
 

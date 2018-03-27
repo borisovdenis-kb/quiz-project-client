@@ -2,11 +2,14 @@
   <div id="quiz-page" v-bind:class="{ 'time-is-over': isTimeOver }">
     <app-header v-bind:is-connected="isConnected"></app-header>
 
-    <template v-if="isQuestionsLoaded">
+    <template v-if="isBlockVisible('quiz')">
       <question
         v-bind:stomp-client="stompClient"
         v-bind:questions="questions">
       </question>
+    </template>
+    <template v-else-if="isBlockVisible('players-results')">
+      <players-results></players-results>
     </template>
     <template v-else>
       <h2>Игра скоро начнется...</h2>
@@ -20,11 +23,12 @@
   import AppHeader from "../AppHeader";
   import Question from "./Question";
   import Bus from "../../Bus";
-  import {commands} from "../../Common";
-  import {globalEvents} from "../../Common";
+  import {globalEvents, commands} from "../../Common";
+  import PlayersResults from "../player/PlayersResults";
 
   export default {
     components: {
+      PlayersResults,
       Question,
       AppHeader
     },
@@ -32,8 +36,10 @@
     data() {
       return {
         questions: [],
+        players: [],
         isConnected: false,
-        isTimeOver: false
+        isTimeOver: false,
+        isPlayersResultsVisible: false
       };
     },
     methods: {
@@ -54,8 +60,11 @@
             Bus.bus.$emit(globalEvents.showAnswer);
           } else if (commandName === commands.SHOW_PLAYERS_ANSWERS) {
             Bus.bus.$emit(globalEvents.showPlayersAnswers, message.content);
-          } else if (commandName === commands.CALC_PLAYERS_SCORE) {
-            console.log(message.content);
+          } else if (commandName === commands.SHOW_PLAYERS_RESULTS) {
+            this.changePlayersResultsVisibility()
+          } else if (commandName === commands.CALC_PLAYERS_RESULTS) {
+            Bus.bus.$emit(globalEvents.showPlayersResults, message.content);
+            // this.players = message.content;
           } else if (commandName === commands.START) {
             Bus.bus.$emit(globalEvents.activateTimer);
           } else if (commandName === commands.PLAY_SOUND) {
@@ -81,6 +90,17 @@
             console.log(error);
           }
         );
+      },
+      changePlayersResultsVisibility() {
+        this.isPlayersResultsVisible = !this.isPlayersResultsVisible;
+      },
+      isBlockVisible(blockName) {
+        switch (blockName) {
+          case 'quiz':
+            return (this.questions.length > 0) && !this.isPlayersResultsVisible;
+          case 'players-results':
+            return this.isPlayersResultsVisible;
+        }
       }
     },
     computed: {
