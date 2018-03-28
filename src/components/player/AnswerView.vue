@@ -27,11 +27,11 @@
       QuestionAnswerInput,
       TruthOrLieInput},
     name: "answer-view",
-    props: ['question'],
+    props: ['question', 'player'],
     data() {
       return {
         answer: {
-          playerId: 1,
+          playerId: this.player.id,
           questionId: '',
           answer: ''
         },

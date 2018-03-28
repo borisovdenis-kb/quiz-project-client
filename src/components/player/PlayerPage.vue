@@ -4,7 +4,7 @@
 
     <div class="container">
       <template v-if="currentQuestion">
-        <answer-view v-bind:question="currentQuestion"></answer-view>
+        <answer-view v-bind:question="currentQuestion" v-bind:player="player"></answer-view>
       </template>
       <template v-else>
         <div class="quiz-waiting">
@@ -16,8 +16,15 @@
         </div>
 
         <div class="player-name">
-          <input placeholder="оригАНАЛьное ИWЯ хD" type="text"/>
-          <div class="confirm-name-btn">Подтвердить имя</div>
+          <template v-if="!isPlayerNameConfirmed">
+            <input v-model="player.name" placeholder="оригАНАЛьное ИWЯ хD" type="text"/>
+            <button class="confirm-name-btn" v-on:click="confirmPlayerName">
+              Подтвердить имя
+            </button>
+          </template>
+          <template v-else>
+            <h4>Название команды: {{ player.name }}</h4>
+          </template>
         </div>
       </template>
     </div>
@@ -29,7 +36,8 @@
   import SockJS from 'sockjs-client';
   import Stomp from 'stompjs';
   import AnswerView from './AnswerView'
-  import AppHeader from "../AppHeader";
+  import AppHeader from '../AppHeader';
+  import {restApiURL} from '../../Common';
 
   export default {
     name: "player-page",
@@ -40,7 +48,13 @@
     data() {
       return {
         currentQuestion: null,
-        isConnected: false
+        isConnected: false,
+        isPlayerNameConfirmed: false,
+        player: {
+          id: null,
+          name: '',
+          score: null
+        }
       }
     },
     methods: {
@@ -64,6 +78,19 @@
           }
         );
       },
+      confirmPlayerName() {
+        let data = this.player;
+
+        this.$http.post(`${restApiURL}/players`, data).then(
+          response => {
+            this.isPlayerNameConfirmed = true;
+            this.$set(this.player, 'id', response.data);
+          },
+          error => {
+
+          }
+        );
+      }
     },
     mounted() {
       this.connectWSServer();
@@ -105,6 +132,7 @@
     background-color: #4cdd7f;
     border: 1px solid #e0e0e0;
     border-radius: 4px;
+    cursor: pointer;
   }
   input {
     flex-basis: 100%;
