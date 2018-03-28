@@ -1,5 +1,6 @@
 <template>
   <div id="players-results">
+    <h2>Текущие результаты:</h2>
     <div class="chart-container">
       <canvas id="players-results-chart"></canvas>
     </div>
@@ -43,7 +44,7 @@
       }
     },
     created() {
-      Bus.bus.$on(globalEvents.showPlayersResults, (players) => {
+      Bus.bus.$on(globalEvents.calcPlayersResults, (players) => {
         this.players = players;
         this.createChart('players-results-chart', this.getChartData());
       });
@@ -54,7 +55,8 @@
 <style scoped>
   #players-results {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-around;
     align-items: center;
     width: 100%;
     height: 100%;
@@ -62,5 +64,6 @@
   .chart-container {
     width: 70%;
     height: 70%;
+    margin-bottom: 100px;
   }
 </style>

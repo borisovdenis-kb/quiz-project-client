@@ -8,12 +8,11 @@
         v-bind:questions="questions">
       </question>
     </template>
-    <template v-else-if="isBlockVisible('players-results')">
-      <players-results></players-results>
-    </template>
-    <template v-else>
+    <template v-else-if="isBlockVisible('quiz-waiting')">
       <h2>Игра скоро начнется...</h2>
     </template>
+
+    <players-results v-show="isBlockVisible('players-results')"></players-results>
   </div>
 </template>
 
@@ -36,7 +35,6 @@
     data() {
       return {
         questions: [],
-        players: [],
         isConnected: false,
         isTimeOver: false,
         isPlayersResultsVisible: false
@@ -63,8 +61,7 @@
           } else if (commandName === commands.SHOW_PLAYERS_RESULTS) {
             this.changePlayersResultsVisibility()
           } else if (commandName === commands.CALC_PLAYERS_RESULTS) {
-            Bus.bus.$emit(globalEvents.showPlayersResults, message.content);
-            // this.players = message.content;
+            Bus.bus.$emit(globalEvents.calcPlayersResults, message.content);
           } else if (commandName === commands.START) {
             Bus.bus.$emit(globalEvents.activateTimer);
           } else if (commandName === commands.PLAY_SOUND) {
@@ -98,6 +95,8 @@
         switch (blockName) {
           case 'quiz':
             return (this.questions.length > 0) && !this.isPlayersResultsVisible;
+          case 'quiz-waiting':
+            return (this.questions.length === 0) && !this.isPlayersResultsVisible;
           case 'players-results':
             return this.isPlayersResultsVisible;
         }

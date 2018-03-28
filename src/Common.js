@@ -24,7 +24,7 @@ let globalEvents = {
   showAnswer: 'show-answer',
   showPlayersAnswers: 'show-players-answers',
   showPlayersResults: 'show-players-results',
-  calcPlayersScore: 'calc-players-score'
+  calcPlayersResults: 'calc-players-results'
 };
 
 let soundTargetNames = {
