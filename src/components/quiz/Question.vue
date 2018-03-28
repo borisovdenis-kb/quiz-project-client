@@ -47,10 +47,9 @@
 
           <div id="players-answers-container" v-if="isPlayersAnswersVisible">
             <div class="player-answer" v-for="(answer, playerName) in playersAnswers">
-              <div>{{ playerName }}:
-                <div class="badge" v-bind:class="playerAnswerExtraStyles(answer)">
-                  {{ answer.answer }}
-                </div>
+              {{ playerName }}:
+              <div class="badge" v-bind:class="playerAnswerExtraStyles(answer)">
+                {{ answer.answer }}
               </div>
             </div>
           </div>
@@ -328,7 +327,6 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
     margin-right: 30px;
     font-size: 0.6em;
   }

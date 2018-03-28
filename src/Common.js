@@ -43,13 +43,13 @@ let roundTypes = {
   truthOrLie: 'TRUTH_OR_LIE'
 };
 
-let restApiURL = 'http://localhost:8080/api';
+const REST_API_URL = 'http://localhost:8080/api';
 
 export {
   commands,
   globalEvents,
   soundTargetNames,
-  restApiURL,
+  REST_API_URL,
   answerStatuses,
   roundTypes
 }

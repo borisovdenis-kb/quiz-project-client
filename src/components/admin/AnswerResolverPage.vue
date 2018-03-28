@@ -75,7 +75,7 @@
 
 <script>
   import AppHeader from "../AppHeader";
-  import {restApiURL, answerStatuses} from "../../Common";
+  import {REST_API_URL, answerStatuses} from "../../Common";
 
   export default {
     components: {AppHeader},
@@ -108,7 +108,7 @@
       updateAnswers() {
         let data = this.convertAnswerDtoToAnswers(this.answersGroupedByPlayers);
 
-        this.$http.put(`${restApiURL}/answers`, data).then(
+        this.$http.put(`${REST_API_URL}/answers`, data).then(
           response => {
             window.location.reload();
           },
@@ -124,7 +124,7 @@
       }
     },
     created() {
-      this.$http.get(`${restApiURL}/answers?status=NOT_RESOLVED`).then(
+      this.$http.get(`${REST_API_URL}/answers?status=NOT_RESOLVED`).then(
         response => {
           this.answersGroupedByPlayers = response.data;
         },

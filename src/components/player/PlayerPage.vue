@@ -37,7 +37,7 @@
   import Stomp from 'stompjs';
   import AnswerView from './AnswerView'
   import AppHeader from '../AppHeader';
-  import {restApiURL} from '../../Common';
+  import {REST_API_URL} from '../../Common';
 
   export default {
     name: "player-page",
@@ -63,33 +63,50 @@
           this.currentQuestion = JSON.parse(frame.body).content;
         });
       },
+      sendPlayerCreationMessage() {
+        let message = JSON.stringify({});
+        this.stompClient.send("/app/player/new", {}, message);
+      },
       connectWSServer() {
         this.ws = new SockJS("http://localhost:8080/app");
         this.stompClient = Stomp.over(this.ws);
         this.stompClient.connect(
           {},
           frame => {
-            console.log(frame);
+            this.createNewPlayer().then(
+              response => {
+                this.$set(this.player, 'id', response.data);
+              },
+              error => {
+                this.actionOnFailedRequest();
+              }
+            );
             this.isConnected = true;
             this.subscribeOnGetCurrentQuestion();
+            this.sendPlayerCreationMessage();
           },
           error => {
             console.log(error);
           }
         );
       },
+      createNewPlayer() {
+        let data = this.player;
+        return this.$http.post(`${REST_API_URL}/players`, data);
+      },
       confirmPlayerName() {
         let data = this.player;
-
-        this.$http.post(`${restApiURL}/players`, data).then(
+        return this.$http.put(`${REST_API_URL}/players/${this.player.id}`, data).then(
           response => {
             this.isPlayerNameConfirmed = true;
-            this.$set(this.player, 'id', response.data);
           },
           error => {
-
+            this.actionOnFailedRequest();
           }
         );
+      },
+      actionOnFailedRequest() {
+        alert('Ошибко на одном из класстеров распределенной системы =(');
       }
     },
     mounted() {

@@ -20,7 +20,7 @@
 <script>
   import TruthOrLieInput from "./TruthOrLieInput";
   import QuestionAnswerInput from "./QuestionAnswerInput";
-  import {restApiURL, roundTypes} from "../../Common";
+  import {REST_API_URL, roundTypes} from "../../Common";
 
   export default {
     components: {
@@ -43,7 +43,7 @@
         this.answer.answer = this.$refs.answerInput.getAnswer();
         this.answer.questionId = this.question.id;
         console.log(this.answer);
-        this.$http.post(`${restApiURL}/answers`, this.answer);
+        this.$http.post(`${REST_API_URL}/answers`, this.answer);
       }
     },
     computed: {

@@ -10,6 +10,7 @@
     </template>
     <template v-else-if="isBlockVisible('quiz-waiting')">
       <h2>Игра скоро начнется...</h2>
+      <div></div>
     </template>
 
     <players-results v-show="isBlockVisible('players-results')"></players-results>
@@ -41,8 +42,13 @@
       };
     },
     methods: {
+      subscribeOnPlayerCreation() {
+        this.stompClient.subscribe('/app/quiz/newPlayer', frame => {
+          console.log('new player!');
+        });
+      },
       subscribeOnGetCurrentQuestion() {
-        this.stompClient.subscribe("/app/client/getCommand", frame => {
+        this.stompClient.subscribe('/app/client/getCommand', frame => {
           let message = JSON.parse(frame.body);
           let commandName = message.command.name;
 
@@ -82,6 +88,7 @@
             console.log(frame);
             this.isConnected = true;
             this.subscribeOnGetCurrentQuestion();
+            this.subscribeOnPlayerCreation();
           },
           error => {
             console.log(error);
