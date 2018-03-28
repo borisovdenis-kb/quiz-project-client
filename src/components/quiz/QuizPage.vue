@@ -2,16 +2,24 @@
   <div id="quiz-page" v-bind:class="{ 'time-is-over': isTimeOver }">
     <app-header v-bind:is-connected="isConnected"></app-header>
 
-    <template v-if="isBlockVisible('quiz')">
-      <question
-        v-bind:stomp-client="stompClient"
-        v-bind:questions="questions">
-      </question>
-    </template>
-    <template v-else-if="isBlockVisible('quiz-waiting')">
-      <h2>Игра скоро начнется...</h2>
-      <div></div>
-    </template>
+    <div class="quiz-container">
+      <template v-if="isBlockVisible('quiz')">
+        <question
+          v-bind:stomp-client="stompClient"
+          v-bind:questions="questions">
+        </question>
+      </template>
+      <template v-else-if="isBlockVisible('quiz-waiting')">
+        <h2>Игра скоро начнется...</h2>
+        <div class="connected-players-container">
+          <div class="player-preview"
+               v-bind:class="{'player-name-confirmed': player.isNameConfirmed}"
+               v-for="player in connectedPlayers">
+            {{ player.name }}
+          </div>
+        </div>
+      </template>
+    </div>
 
     <players-results v-show="isBlockVisible('players-results')"></players-results>
   </div>
@@ -25,6 +33,7 @@
   import Bus from "../../Bus";
   import {globalEvents, commands} from "../../Common";
   import PlayersResults from "../player/PlayersResults";
+  import _ from 'lodash';
 
   export default {
     components: {
@@ -38,13 +47,38 @@
         questions: [],
         isConnected: false,
         isTimeOver: false,
-        isPlayersResultsVisible: false
+        isPlayersResultsVisible: false,
+        connectedPlayers: []
       };
     },
     methods: {
       subscribeOnPlayerCreation() {
         this.stompClient.subscribe('/app/quiz/newPlayer', frame => {
-          console.log('new player!');
+          let player = JSON.parse(frame.body).content;
+          let extendedPlayer = {
+            id: player.id,
+            name: player.name,
+            score: player.score,
+            isNameConfirmed: false
+          };
+
+          this.connectedPlayers.push(extendedPlayer);
+        });
+      },
+      subscribeOnPlayerNameUpdating() {
+        this.stompClient.subscribe('/app/quiz/playerUpdateName', frame => {
+          let updatedPlayer = JSON.parse(frame.body).content;
+          let player = _.find(this.connectedPlayers, (p) => p.id === updatedPlayer.id);
+
+          this.$set(player, 'name', updatedPlayer.name);
+        });
+      },
+      subscribeOnPlayerNameConfirmation() {
+        this.stompClient.subscribe('/app/quiz/playerConfirmName', frame => {
+          let updatedPlayer = JSON.parse(frame.body).content;
+          let player = _.find(this.connectedPlayers, (p) => p.id === updatedPlayer.id);
+
+          this.$set(player, 'isNameConfirmed', true);
         });
       },
       subscribeOnGetCurrentQuestion() {
@@ -85,10 +119,11 @@
         this.stompClient.connect(
           {},
           frame => {
-            console.log(frame);
             this.isConnected = true;
             this.subscribeOnGetCurrentQuestion();
             this.subscribeOnPlayerCreation();
+            this.subscribeOnPlayerNameUpdating();
+            this.subscribeOnPlayerNameConfirmation();
           },
           error => {
             console.log(error);
@@ -130,6 +165,41 @@
     display: flex;
     flex-flow: column;
     height: 100%;
+  }
+
+  .quiz-container {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .connected-players-container {
+    margin-top: 200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 40%;
+    height: 50px;
+  }
+
+  .player-preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 144px;
+    min-height: 89px;
+    padding: 20px;
+    background-color: #fdfdfd;
+    border: 3px dashed #e2e2e2;
+    border-radius: 4px;
+    font-size: 1.3em;
+  }
+
+  .player-name-confirmed {
+    background-color: #56d394;
+    border: 3px solid #48a875;
   }
 
   .time-is-over {

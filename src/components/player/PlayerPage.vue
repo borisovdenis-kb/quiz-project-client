@@ -17,7 +17,7 @@
 
         <div class="player-name">
           <template v-if="!isPlayerNameConfirmed">
-            <input v-model="player.name" placeholder="оригАНАЛьное ИWЯ хD" type="text"/>
+            <input v-model="playerName" placeholder="оригАНАЛьное ИWЯ хD" type="text" maxlength="25"/>
             <button class="confirm-name-btn" v-on:click="confirmPlayerName">
               Подтвердить имя
             </button>
@@ -50,6 +50,7 @@
         currentQuestion: null,
         isConnected: false,
         isPlayerNameConfirmed: false,
+        playerName: '',
         player: {
           id: null,
           name: '',
@@ -59,16 +60,16 @@
     },
     methods: {
       subscribeOnGetCurrentQuestion() {
-        this.stompClient.subscribe("/app/player/getCurrentQuestion", frame => {
+        this.stompClient.subscribe('/app/player/getCurrentQuestion', frame => {
           this.currentQuestion = JSON.parse(frame.body).content;
         });
       },
       sendPlayerCreationMessage() {
-        let message = JSON.stringify({});
-        this.stompClient.send("/app/player/new", {}, message);
+        let message = {content: this.player};
+        this.stompClient.send('/app/player/new', {}, JSON.stringify(message));
       },
       connectWSServer() {
-        this.ws = new SockJS("http://localhost:8080/app");
+        this.ws = new SockJS('http://localhost:8080/app');
         this.stompClient = Stomp.over(this.ws);
         this.stompClient.connect(
           {},
@@ -76,6 +77,7 @@
             this.createNewPlayer().then(
               response => {
                 this.$set(this.player, 'id', response.data);
+                this.sendPlayerCreationMessage();
               },
               error => {
                 this.actionOnFailedRequest();
@@ -83,7 +85,6 @@
             );
             this.isConnected = true;
             this.subscribeOnGetCurrentQuestion();
-            this.sendPlayerCreationMessage();
           },
           error => {
             console.log(error);
@@ -98,7 +99,10 @@
         let data = this.player;
         return this.$http.put(`${REST_API_URL}/players/${this.player.id}`, data).then(
           response => {
+            let message = {content: this.player};
+
             this.isPlayerNameConfirmed = true;
+            this.stompClient.send('/app/player/confirmName', {}, JSON.stringify(message));
           },
           error => {
             this.actionOnFailedRequest();
@@ -107,6 +111,14 @@
       },
       actionOnFailedRequest() {
         alert('Ошибко на одном из класстеров распределенной системы =(');
+      }
+    },
+    watch: {
+      playerName: function(newValue) {
+        let message = {content: this.player};
+
+        this.$set(this.player, 'name', newValue);
+        this.stompClient.send('/app/player/updateName', {}, JSON.stringify(message));
       }
     },
     mounted() {
