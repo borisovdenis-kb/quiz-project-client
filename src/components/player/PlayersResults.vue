@@ -38,7 +38,7 @@
           data: this.players.map(p => p.score),
           backgroundColor: this.players.map(p => '#47ce85'),
           borderColor: [],
-          borderWidth: 3
+          borderWidth: 2
         }];
         return cdt;
       }

@@ -8,7 +8,7 @@ export const chartDataTemplate = {
         data: [],
         backgroundColor: [],
         borderColor: [],
-        borderWidth: 3
+        borderWidth: 2
       }
     ]
   },
@@ -19,12 +19,12 @@ export const chartDataTemplate = {
       yAxes: [{
         ticks: {
           beginAtZero: true,
-          padding: 25,
           fontSize: 30
         }
       }],
       xAxes: [{
         ticks: {
+          beginAtZero: true,
           fontSize: 20
         }
       }]
