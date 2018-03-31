@@ -2,24 +2,22 @@
   <div id="quiz-page" v-bind:class="{ 'time-is-over': isTimeOver }">
     <app-header v-bind:is-connected="isConnected"></app-header>
 
-    <div class="quiz-container">
-      <template v-if="isBlockVisible('quiz')">
-        <question
-          v-bind:stomp-client="stompClient"
-          v-bind:questions="questions">
-        </question>
-      </template>
-      <template v-else-if="isBlockVisible('quiz-waiting')">
-        <h2>Игра скоро начнется...</h2>
-        <div class="connected-players-container">
-          <div class="player-preview"
-               v-bind:class="{'player-name-confirmed': player.isNameConfirmed}"
-               v-for="player in connectedPlayers">
-            {{ player.name }}
-          </div>
+    <template v-if="isBlockVisible('quiz')">
+      <question
+        v-bind:stomp-client="stompClient"
+        v-bind:questions="questions">
+      </question>
+    </template>
+    <template v-else-if="isBlockVisible('quiz-waiting')">
+      <h2>Игра скоро начнется...</h2>
+      <div class="connected-players-container">
+        <div class="player-preview"
+             v-bind:class="{'player-name-confirmed': player.isNameConfirmed}"
+             v-for="player in connectedPlayers">
+          {{ player.name }}
         </div>
-      </template>
-    </div>
+      </div>
+    </template>
 
     <players-results v-show="isBlockVisible('players-results')"></players-results>
   </div>
@@ -168,18 +166,18 @@
   }
 
   .quiz-container {
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    align-items: center;
+    /*display: flex;*/
+    /*flex-flow: column;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
   }
 
   .connected-players-container {
-    margin-top: 200px;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
     align-items: center;
+    flex-wrap: wrap;
+    margin-top: 200px;
     width: 40%;
     height: 50px;
   }
@@ -190,6 +188,8 @@
     align-items: center;
     min-width: 144px;
     min-height: 89px;
+    margin-left: 20px;
+    margin-bottom: 30px;
     padding: 20px;
     background-color: #fdfdfd;
     border: 3px dashed #e2e2e2;

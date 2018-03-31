@@ -17,7 +17,7 @@
 
         <div class="player-name">
           <template v-if="!isPlayerNameConfirmed">
-            <input v-model="playerName" placeholder="оригАНАЛьное ИWЯ хD" type="text" maxlength="25"/>
+            <input v-model="playerName" placeholder="оригАНАЛьное ИWЯ хD" type="text" maxlength="20"/>
             <button class="confirm-name-btn" v-on:click="confirmPlayerName">
               Подтвердить имя
             </button>
@@ -156,7 +156,7 @@
     justify-content: center;
     align-items: center;
     margin-top: 20px;
-    width: 60%;
+    width: 80%;
     height: 30px;
     background-color: #4cdd7f;
     border: 1px solid #e0e0e0;
