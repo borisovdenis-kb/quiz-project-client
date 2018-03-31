@@ -14,7 +14,7 @@
         <div class="player-preview"
              v-bind:class="{'player-name-confirmed': player.isNameConfirmed}"
              v-for="player in connectedPlayers">
-          {{ player.name }}
+          @ {{ player.name }}
         </div>
       </div>
     </template>
@@ -165,13 +165,6 @@
     height: 100%;
   }
 
-  .quiz-container {
-    /*display: flex;*/
-    /*flex-flow: column;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
-  }
-
   .connected-players-container {
     display: flex;
     flex-direction: row;
@@ -186,20 +179,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width: 144px;
-    min-height: 89px;
+    min-width: 50px;
+    min-height: 35px;
     margin-left: 20px;
     margin-bottom: 30px;
-    padding: 20px;
+    padding: 0px 15px 0px 15px;
     background-color: #fdfdfd;
-    border: 3px dashed #e2e2e2;
-    border-radius: 4px;
+    border: 2px dashed #e2e2e2;
+    border-radius: 20px;
     font-size: 1.3em;
   }
 
   .player-name-confirmed {
     background-color: #56d394;
-    border: 3px solid #48a875;
+    border: 2px solid #53c387;
   }
 
   .time-is-over {
