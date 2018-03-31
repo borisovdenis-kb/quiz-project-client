@@ -29,6 +29,9 @@
       },
       getAnswer() {
         return this.answer;
+      },
+      clearAnswer() {
+        this.answer = null;
       }
     }
   }

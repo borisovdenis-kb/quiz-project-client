@@ -42,8 +42,12 @@
       sendAnswer() {
         this.answer.answer = this.$refs.answerInput.getAnswer();
         this.answer.questionId = this.question.id;
-        console.log(this.answer);
         this.$http.post(`${REST_API_URL}/answers`, this.answer);
+      }
+    },
+    watch: {
+      question: function () {
+        this.$refs.answerInput.clearAnswer();
       }
     },
     computed: {
