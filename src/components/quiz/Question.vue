@@ -176,12 +176,14 @@
         this.changeAnswerVisibility();
       });
 
-      Bus.bus.$on(globalEvents.showPlayersAnswers, (playersAnswers) => {
-        this.playersAnswers = playersAnswers;
+      Bus.bus.$on(globalEvents.showPlayersAnswers, message => {
+        this.playersAnswers = message.content;
         this.changePlayersAnswersVisibility();
       });
 
-      Bus.bus.$on(globalEvents.playSound, (target) => {
+      Bus.bus.$on(globalEvents.playSound, message => {
+        let target = message.command.metaInfo.target;
+
         if (target === soundTargetNames.sound) {
           this.playAudio(this.sound);
           console.log(this.sound);
@@ -191,7 +193,9 @@
         }
       });
 
-      Bus.bus.$on(globalEvents.pauseSound, (target) => {
+      Bus.bus.$on(globalEvents.pauseSound, message => {
+        let target = message.command.metaInfo.target;
+
         if (target === soundTargetNames.sound) {
           this.pauseAudio(this.sound);
         } else if (target === soundTargetNames.funnyStaff) {
@@ -199,7 +203,9 @@
         }
       });
 
-      Bus.bus.$on(globalEvents.changeVolume, (metaInfo) => {
+      Bus.bus.$on(globalEvents.changeVolume, message => {
+        let metaInfo = message.command.metaInfo;
+
         if (metaInfo.target === soundTargetNames.sound) {
           this.changeVolume(this.sound, metaInfo.volume);
         } else if (target === soundTargetNames.funnyStaff) {

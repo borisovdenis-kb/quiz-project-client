@@ -1,4 +1,4 @@
-let commands = {
+const commands = {
   LOAD: 'LOAD',
   NEXT: 'NEXT',
   PREV: 'PREV',
@@ -12,7 +12,7 @@ let commands = {
   CALC_PLAYERS_RESULTS: 'CALC_PLAYERS_RESULTS'
 };
 
-let globalEvents = {
+const globalEvents = {
   activateTimer: 'activate-timer',
   timeIsOver: 'time-is-over',
   playSound: 'play-sound',
@@ -27,18 +27,18 @@ let globalEvents = {
   calcPlayersResults: 'calc-players-results'
 };
 
-let soundTargetNames = {
+const soundTargetNames = {
   sound: 'sound',
   funnyStaff: 'funnyStuff'
 };
 
-let answerStatuses = {
+const answerStatuses = {
   not_resolved: 'NOT_RESOLVED',
   right: 'RIGHT',
   wrong: 'WRONG'
 };
 
-let roundTypes = {
+const roundTypes = {
   questionAnswer: 'QUESTION_ANSWER',
   truthOrLie: 'TRUTH_OR_LIE'
 };

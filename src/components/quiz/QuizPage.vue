@@ -45,7 +45,20 @@
         isConnected: false,
         isTimeOver: false,
         isPlayersResultsVisible: false,
-        connectedPlayers: {}
+        connectedPlayers: {},
+        mapCommandToEvent: {
+          'LOAD': globalEvents.loadQuestions,
+          'NEXT': globalEvents.nextQuestion,
+          'PREV': globalEvents.prevQuestion,
+          'SHOW_ANSWER': globalEvents.showAnswer,
+          'SHOW_PLAYERS_ANSWERS': globalEvents.showPlayersAnswers,
+          'SHOW_PLAYERS_RESULTS': globalEvents.showPlayersResults,
+          'CALC_PLAYERS_RESULTS': globalEvents.calcPlayersResults,
+          'START': globalEvents.activateTimer,
+          'PLAY_SOUND': globalEvents.playSound,
+          'PAUSE_SOUND': globalEvents.pauseSound,
+          'CHANGE_VOLUME': globalEvents.changeVolume
+        }
       };
     },
     methods: {
@@ -81,33 +94,8 @@
       subscribeOnGetCurrentQuestion() {
         this.stompClient.subscribe('/app/client/getCommand', frame => {
           let message = JSON.parse(frame.body);
-          let commandName = message.command.name;
 
-          if (commandName === commands.LOAD) {
-            if (!this.isQuestionsLoaded) {
-              this.questions = message.content;
-            }
-          } else if (commandName === commands.NEXT) {
-            Bus.bus.$emit(globalEvents.nextQuestion);
-          } else if (commandName === commands.PREV) {
-            Bus.bus.$emit(globalEvents.prevQuestion);
-          } else if (commandName === commands.SHOW_ANSWER) {
-            Bus.bus.$emit(globalEvents.showAnswer);
-          } else if (commandName === commands.SHOW_PLAYERS_ANSWERS) {
-            Bus.bus.$emit(globalEvents.showPlayersAnswers, message.content);
-          } else if (commandName === commands.SHOW_PLAYERS_RESULTS) {
-            this.changePlayersResultsVisibility()
-          } else if (commandName === commands.CALC_PLAYERS_RESULTS) {
-            Bus.bus.$emit(globalEvents.calcPlayersResults, message.content);
-          } else if (commandName === commands.START) {
-            Bus.bus.$emit(globalEvents.activateTimer);
-          } else if (commandName === commands.PLAY_SOUND) {
-            Bus.bus.$emit(globalEvents.playSound, message.command.metaInfo.target);
-          } else if (commandName === commands.PAUSE_SOUND) {
-            Bus.bus.$emit(globalEvents.pauseSound, message.command.metaInfo.target);
-          } else if (commandName === commands.CHANGE_VOLUME) {
-            Bus.bus.$emit(globalEvents.changeVolume, message.command.metaInfo);
-          }
+          this.emitEventOnCommand(message.command.name, message);
         });
       },
       connectWSServer() {
@@ -126,6 +114,9 @@
             console.log(error);
           }
         );
+      },
+      emitEventOnCommand(command, data) {
+        Bus.bus.$emit(this.mapCommandToEvent[command], data);
       },
       changePlayersResultsVisibility() {
         this.isPlayersResultsVisible = !this.isPlayersResultsVisible;
@@ -150,9 +141,19 @@
       this.connectWSServer();
     },
     created() {
-      Bus.bus.$on(globalEvents.timeIsOver, (isTimeOver) => {
+      Bus.bus.$on(globalEvents.loadQuestions, message => {
+        if (!this.isQuestionsLoaded) {
+          this.questions = message.content;
+        }
+      });
+
+      Bus.bus.$on(globalEvents.showPlayersResults, () => {
+        this.changePlayersResultsVisibility();
+      });
+
+      Bus.bus.$on(globalEvents.timeIsOver, isTimeOver => {
         this.isTimeOver = isTimeOver;
-      })
+      });
     }
   };
 </script>

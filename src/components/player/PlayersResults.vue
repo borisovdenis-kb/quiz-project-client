@@ -44,8 +44,8 @@
       }
     },
     created() {
-      Bus.bus.$on(globalEvents.calcPlayersResults, (players) => {
-        this.players = players;
+      Bus.bus.$on(globalEvents.calcPlayersResults, message => {
+        this.players = message.content;
         this.createChart('players-results-chart', this.getChartData());
       });
     }
