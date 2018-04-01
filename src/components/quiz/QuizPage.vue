@@ -13,7 +13,7 @@
       <div class="connected-players-container">
         <div class="player-preview"
              v-bind:class="{'player-name-confirmed': player.isNameConfirmed}"
-             v-for="player in connectedPlayers">
+             v-for="(player, id) in connectedPlayers">
           @ {{ player.name }}
         </div>
       </div>
@@ -31,7 +31,6 @@
   import Bus from "../../Bus";
   import {globalEvents, commands} from "../../Common";
   import PlayersResults from "../player/PlayersResults";
-  import _ from 'lodash';
 
   export default {
     components: {
@@ -46,7 +45,7 @@
         isConnected: false,
         isTimeOver: false,
         isPlayersResultsVisible: false,
-        connectedPlayers: []
+        connectedPlayers: {}
       };
     },
     methods: {
@@ -60,13 +59,13 @@
             isNameConfirmed: false
           };
 
-          this.connectedPlayers.push(extendedPlayer);
+          this.$set(this.connectedPlayers, extendedPlayer.id, extendedPlayer);
         });
       },
       subscribeOnPlayerNameUpdating() {
         this.stompClient.subscribe('/app/quiz/playerUpdateName', frame => {
           let updatedPlayer = JSON.parse(frame.body).content;
-          let player = _.find(this.connectedPlayers, (p) => p.id === updatedPlayer.id);
+          let player = this.connectedPlayers[updatedPlayer.id];
 
           this.$set(player, 'name', updatedPlayer.name);
         });
@@ -74,7 +73,7 @@
       subscribeOnPlayerNameConfirmation() {
         this.stompClient.subscribe('/app/quiz/playerConfirmName', frame => {
           let updatedPlayer = JSON.parse(frame.body).content;
-          let player = _.find(this.connectedPlayers, (p) => p.id === updatedPlayer.id);
+          let player = this.connectedPlayers[updatedPlayer.id];
 
           this.$set(player, 'isNameConfirmed', true);
         });
