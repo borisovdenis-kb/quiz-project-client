@@ -208,7 +208,7 @@
 
         if (metaInfo.target === soundTargetNames.sound) {
           this.changeVolume(this.sound, metaInfo.volume);
-        } else if (target === soundTargetNames.funnyStaff) {
+        } else if (metaInfo.target === soundTargetNames.funnyStaff) {
           this.changeVolume(this.funnyStaff, metaInfo.volume);
         }
       });
