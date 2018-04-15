@@ -6,7 +6,7 @@
 
       <template v-if="!isAnswersEmpty">
         <div id="container">
-          <div v-for="(playerAnswers, playerName)  in answersGroupedByPlayers">
+          <div v-for="(playerAnswers, playerName) in answersGroupedByPlayers">
             <div class="resolver-for-player-header">
               <span>{{ playerName }}</span>
             </div>
@@ -59,7 +59,9 @@
             <div id="save-button" v-on:click="updateAnswers()">Save</div>
           </div>
 
-          <h3 v-if="isRequestFailed" style="color: red">Во время обновления списка вопросов возникла ошибка.</h3>
+          <h3 v-if="isRequestFailed" style="color: red">
+            Во время обновления списка вопросов возникла ошибка.
+          </h3>
 
         </div>
       </template>

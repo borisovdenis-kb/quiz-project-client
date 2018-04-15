@@ -6,15 +6,16 @@ describe('TruthOrLieInput test', () => {
 
   beforeEach(() => {
     component = Vue.extend(TruthOrLieInput);
-    vm = new component({
-      data: {
-        answer: 'test'
-      }
-    }).$mount();
+    vm = new component().$mount();
   });
 
-  it('answer should equals to "test"', () => {
-    expect(vm.answer).toEqual('test');
-  })
+  describe('component methods', () => {
+    it('clearAnswer', () => {
+      vm.answer = 'test text';
+      expect(vm.answer).toEqual('test text');
 
+      vm.clearAnswer();
+      expect(vm.answer).toEqual(null);
+    });
+  });
 });
