@@ -29,6 +29,33 @@ describe('AnswerResolverPage test', () => {
     vm = wrapper.vm;
   });
 
+  describe('component methods', () => {
+    it('convertAnswersDtoToAnswers', () => {
+      const playersAnswersMap = {
+        Denzel: [{
+          id: 170,
+          question: {
+            id: 6,
+            question: 'Test test test?',
+          },
+          answer: true,
+          rightAnswer: true,
+          player: {id: 282, name: 'Denzel', score: 5},
+          status: 'NOT_RESOLVED'
+        }]
+      };
+      const result = vm.convertAnswersDtoToAnswers(playersAnswersMap);
+      const expectedResult = [{
+        id: 170,
+        questionId: 6,
+        playerId: 282,
+        answer: true,
+        status: 'NOT_RESOLVED'
+      }];
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
   describe('user interactions', () => {
     let updateAnswersSpy;
 

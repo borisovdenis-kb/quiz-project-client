@@ -6,7 +6,7 @@
 
       <template v-if="!isAnswersEmpty">
         <div id="container">
-          <div v-for="(playerAnswers, playerName) in answersGroupedByPlayers">
+          <div v-for="(playerAnswers, playerName) in playersAnswersMap">
             <div class="resolver-for-player-header">
               <span>{{ playerName }}</span>
             </div>
@@ -84,7 +84,7 @@
     name: "answer-resolver-page",
     data() {
       return {
-        answersGroupedByPlayers: {},
+        playersAnswersMap: {},
         statuses: answerStatuses,
         isRequestFailed: false
       }
@@ -93,9 +93,9 @@
       setAnswerStatus(item, status) {
         this.$set(item, 'status', status);
       },
-      convertAnswerDtoToAnswers(answerDtoList) {
+      convertAnswersDtoToAnswers(playersAnswersMap) {
         return Object
-          .values(answerDtoList)
+          .values(playersAnswersMap)
           .reduce((x, y) => x.concat(y))
           .map( (answerDto) => {
             return {
@@ -108,7 +108,7 @@
           });
       },
       updateAnswers() {
-        let data = this.convertAnswerDtoToAnswers(this.answersGroupedByPlayers);
+        let data = this.convertAnswersDtoToAnswers(this.playersAnswersMap);
 
         this.$http.put(`${REST_API_URL}/answers`, data).then(
           response => {
@@ -122,13 +122,13 @@
     },
     computed: {
       isAnswersEmpty: function () {
-        return Object.keys(this.answersGroupedByPlayers).length === 0;
+        return Object.keys(this.playersAnswersMap).length === 0;
       }
     },
     created() {
       this.$http.get(`${REST_API_URL}/answers?status=NOT_RESOLVED`).then(
         response => {
-          this.answersGroupedByPlayers = response.data;
+          this.playersAnswersMap = response.data;
         },
         error => {
 
