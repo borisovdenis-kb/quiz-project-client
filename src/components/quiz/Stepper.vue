@@ -27,23 +27,9 @@
   export default {
     name: 'stepper',
     props: ['stepsAmount', 'currentStepIndex'],
-    data() {
-      return {
-        visited: [this.currentStepIndex]
-      }
-    },
     methods: {
       isStepPassed(stepIndex) {
         return stepIndex <= this.currentStepIndex;
-      }
-    },
-    watch: {
-      currentStepIndex: function (newValue) {
-        if (newValue !== 0 && this.visited.indexOf(newValue) === -1) {
-          this.visited.push(newValue);
-        } else {
-          this.visited = [newValue];
-        }
       }
     }
   }
