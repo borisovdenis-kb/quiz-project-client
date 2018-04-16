@@ -33,40 +33,104 @@ describe('Test suite', () => {
   });
 
   describe('events', () => {
-    it('changeVolume, target is sound', () => {
-      const spy = jest.spyOn(vm, 'changeVolume');
 
-      Bus.bus.$emit(globalEvents.changeVolume, {
+    /**
+     * Method for test "audio" events
+     * @param event - event to emit
+     * @param methodToSpyOn - method of component
+     * @param target - "sound" or "funnyStuff"
+     * @param expectedMethodArgs - list of arguments with which the method call is expected
+     */
+    function testAudioEvent(event, target, methodToSpyOn, expectedMethodArgs) {
+      const spy = jest.spyOn(vm, methodToSpyOn);
+      const message = {
         command: {
           metaInfo: {
-            target: soundTargetNames.sound,
+            target: target,
             volume: 100
           }
         }
-      });
+      };
 
-      expect(spy).toHaveBeenCalledWith(vm.sound, 100);
+      Bus.bus.$emit(event, message);
 
-      spy.mockReset();
-      spy.mockRestore();
-    });
-
-    it('changeVolume, target is funnyStuff', () => {
-      const spy = jest.spyOn(vm, 'changeVolume');
-
-      Bus.bus.$emit(globalEvents.changeVolume, {
-        command: {
-          metaInfo: {
-            target: soundTargetNames.funnyStaff,
-            volume: 100
-          }
-        }
-      });
-
-      expect(spy).toHaveBeenCalledWith(vm.funnyStaff, 100);
+      expect(spy).toHaveBeenCalledWith(...expectedMethodArgs);
 
       spy.mockReset();
       spy.mockRestore();
+    }
+
+    describe('changeVolume', () => {
+      it('target is sound', () => {
+        const methodName = 'changeVolume';
+
+        testAudioEvent(
+          globalEvents.changeVolume,
+          soundTargetNames.sound,
+          methodName,
+          [vm.sound, 100]
+        );
+      });
+
+      it('target is funnyStuff', () => {
+        const methodName = 'changeVolume';
+
+        testAudioEvent(
+          globalEvents.changeVolume,
+          soundTargetNames.funnyStaff,
+          methodName,
+          [vm.funnyStaff, 100]
+        );
+      });
     });
+
+    describe('pauseSound', () => {
+      it('target is sound', () => {
+        const methodName = 'pauseAudio';
+
+        testAudioEvent(
+          globalEvents.pauseSound,
+          soundTargetNames.sound,
+          methodName,
+          [vm.sound]
+        );
+      });
+
+      it('target is funnyStuff', () => {
+        const methodName = 'pauseAudio';
+
+        testAudioEvent(
+          globalEvents.pauseSound,
+          soundTargetNames.funnyStaff,
+          methodName,
+          [vm.funnyStaff]
+        );
+      });
+    });
+
+    describe('playSound', () => {
+      it('target is sound', () => {
+        const methodName = 'playAudio';
+
+        testAudioEvent(
+          globalEvents.playSound,
+          soundTargetNames.sound,
+          methodName,
+          [vm.sound]
+        );
+      });
+
+      it('target is funnyStuff', () => {
+        const methodName = 'playAudio';
+
+        testAudioEvent(
+          globalEvents.playSound,
+          soundTargetNames.funnyStaff,
+          methodName,
+          [vm.funnyStaff]
+        );
+      });
+    });
+
   });
 });

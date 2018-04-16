@@ -186,10 +186,8 @@
 
         if (target === soundTargetNames.sound) {
           this.playAudio(this.sound);
-          console.log(this.sound);
         } else if (target === soundTargetNames.funnyStaff) {
           this.playAudio(this.funnyStaff);
-          console.log(this.funnyStaff);
         }
       });
 
