@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import AnswerResolverPage from '../../../src/components/admin/AnswerResolverPage'
 import Vue from 'vue';
 import VueResource from 'vue-resource';
-import {endpoints} from "../../http/fake-endpoints/answer-endpoints";
+import {endpoints} from "../../fixture/fake-endpoints/answer-endpoints";
 
 Vue.use(VueResource);
 
