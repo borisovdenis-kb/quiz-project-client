@@ -27,8 +27,8 @@ const testData = {
     "roundType": "TRUTH_OR_LIE",
     "timeNeededSec": 10,
     "imageFilePath": "static/image/360062_11394321.jpg",
-    "soundFilePath": null,
-    "funnyStuffFilePath": null
+    "soundFilePath": "static/sound/Azino_Tri_Topora.mp3",
+    "funnyStuffFilePath": "static/sound/BIG_SHAQ_PREKOL.mp3"
   }]]
 };
 

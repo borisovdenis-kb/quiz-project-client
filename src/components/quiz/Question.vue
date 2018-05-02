@@ -103,21 +103,17 @@
       nextQuestion() {
         if (this.currentQuestionIndex < this.questions[this.roundIndex].length - 1) {
           this.currentQuestionIndex++;
-        } else {
-          if (this.roundIndex < this.questions.length - 1) {
-            this.roundIndex++;
-            this.currentQuestionIndex = 0;
-          }
+        } else if (this.roundIndex < this.questions.length - 1) {
+          this.roundIndex++;
+          this.currentQuestionIndex = 0;
         }
       },
       prevQuestion() {
         if (this.currentQuestionIndex > 0) {
           this.currentQuestionIndex--;
-        } else {
-          if (this.roundIndex > 0) {
-            this.roundIndex--;
-            this.currentQuestionIndex = this.questions[this.roundIndex].length - 1
-          }
+        } else if (this.roundIndex > 0) {
+          this.roundIndex--;
+          this.currentQuestionIndex = this.questions[this.roundIndex].length - 1
         }
       },
       changeAnswerVisibility() {
