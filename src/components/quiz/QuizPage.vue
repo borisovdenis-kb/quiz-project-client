@@ -29,7 +29,7 @@
   import AppHeader from "../AppHeader";
   import Question from "./Question";
   import Bus from "../../Bus";
-  import {globalEvents, commands} from "../../Common";
+  import {globalEvents, mapCommandToEvent} from "../../Common";
   import PlayersResults from "../player/PlayersResults";
 
   export default {
@@ -45,20 +45,7 @@
         isConnected: false,
         isTimeOver: false,
         isPlayersResultsVisible: false,
-        connectedPlayers: {},
-        mapCommandToEvent: {
-          'LOAD': globalEvents.loadQuestions,
-          'NEXT': globalEvents.nextQuestion,
-          'PREV': globalEvents.prevQuestion,
-          'SHOW_ANSWER': globalEvents.showAnswer,
-          'SHOW_PLAYERS_ANSWERS': globalEvents.showPlayersAnswers,
-          'SHOW_PLAYERS_RESULTS': globalEvents.showPlayersResults,
-          'CALC_PLAYERS_RESULTS': globalEvents.calcPlayersResults,
-          'START': globalEvents.activateTimer,
-          'PLAY_SOUND': globalEvents.playSound,
-          'PAUSE_SOUND': globalEvents.pauseSound,
-          'CHANGE_VOLUME': globalEvents.changeVolume
-        }
+        connectedPlayers: {}
       };
     },
     methods: {
@@ -116,7 +103,7 @@
         );
       },
       emitEventOnCommand(command, data) {
-        Bus.bus.$emit(this.mapCommandToEvent[command], data);
+        Bus.bus.$emit(mapCommandToEvent[command], data);
       },
       changePlayersResultsVisibility() {
         this.isPlayersResultsVisible = !this.isPlayersResultsVisible;

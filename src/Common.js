@@ -27,6 +27,20 @@ const globalEvents = {
   calcPlayersResults: 'calc-players-results'
 };
 
+const mapCommandToEvent = {
+  'LOAD': globalEvents.loadQuestions,
+  'NEXT': globalEvents.nextQuestion,
+  'PREV': globalEvents.prevQuestion,
+  'SHOW_ANSWER': globalEvents.showAnswer,
+  'SHOW_PLAYERS_ANSWERS': globalEvents.showPlayersAnswers,
+  'SHOW_PLAYERS_RESULTS': globalEvents.showPlayersResults,
+  'CALC_PLAYERS_RESULTS': globalEvents.calcPlayersResults,
+  'START': globalEvents.activateTimer,
+  'PLAY_SOUND': globalEvents.playSound,
+  'PAUSE_SOUND': globalEvents.pauseSound,
+  'CHANGE_VOLUME': globalEvents.changeVolume
+};
+
 const soundTargetNames = {
   sound: 'sound',
   funnyStaff: 'funnyStuff'
@@ -51,5 +65,6 @@ export {
   soundTargetNames,
   REST_API_URL,
   answerStatuses,
-  roundTypes
+  roundTypes,
+  mapCommandToEvent
 }

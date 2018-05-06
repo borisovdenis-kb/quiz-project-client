@@ -6,6 +6,7 @@
       <template v-if="currentQuestion">
         <answer-view v-bind:question="currentQuestion" v-bind:player="player"></answer-view>
       </template>
+
       <template v-else>
         <div class="quiz-waiting">
           <h2>Игра скоро начнется...</h2>
@@ -37,7 +38,8 @@
   import Stomp from 'stompjs';
   import AnswerView from './AnswerView'
   import AppHeader from '../AppHeader';
-  import {REST_API_URL} from '../../Common';
+  import {REST_API_URL, mapCommandToEvent} from '../../Common';
+  import Bus from "../../Bus";
 
   export default {
     name: "player-page",
@@ -68,6 +70,16 @@
         let message = {content: this.player};
         this.stompClient.send('/app/player/new', {}, JSON.stringify(message));
       },
+      subscribeOnGetCommand() {
+        this.stompClient.subscribe('/app/client/getCommand', frame => {
+          let message = JSON.parse(frame.body);
+
+          this.emitEventOnCommand(message.command.name, message);
+        });
+      },
+      emitEventOnCommand(command, data) {
+        Bus.bus.$emit(mapCommandToEvent[command], data);
+      },
       connectWSServer() {
         this.ws = new SockJS('http://localhost:8080/app');
         this.stompClient = Stomp.over(this.ws);
@@ -78,6 +90,7 @@
               response => {
                 this.$set(this.player, 'id', response.data);
                 this.sendPlayerCreationMessage();
+                this.subscribeOnGetCommand();
               },
               error => {
                 this.actionOnFailedRequest();

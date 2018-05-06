@@ -17,7 +17,7 @@
         }
       },
       methods: {
-        countDownTime: function () {
+        countDownTime() {
           let intervalId = setInterval(() => {
             this.timeSec--;
             if (this.timeSec <= 0) {
@@ -25,10 +25,13 @@
               Bus.bus.$emit(globalEvents.timeIsOver, true);
             }
           }, 1000);
+        },
+        getTime() {
+          return this.timeSec;
         }
       },
       watch: {
-        timeNeededSec: function (newTimeNeededSec, oldTimeNeededSec) {
+        timeNeededSec: function (newTimeNeededSec) {
           this.timeSec = newTimeNeededSec;
           Bus.bus.$emit(globalEvents.timeIsOver, false);
         }

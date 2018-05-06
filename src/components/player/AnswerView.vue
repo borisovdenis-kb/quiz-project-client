@@ -1,18 +1,24 @@
 <template>
     <div id="answer-view">
       <div id="answer-container">
-        <p>{{ question.question }}</p>
-        <div id="input-answer-container">
 
+        <timer ref="timerComponent" v-bind:time-needed-sec="question.timeNeededSec"></timer>
+
+        <div class="time">{{ time }}</div>
+
+        <p>{{ question.question }}</p>
+
+        <div id="input-answer-container">
           <template v-if="question.roundType === roundTypes.questionAnswer">
             <question-answer-input ref="answerInput"></question-answer-input>
           </template>
           <template v-else>
             <truth-or-lie-input ref="answerInput"></truth-or-lie-input>
           </template>
-
         </div>
+
         <button class="btn-style" v-on:click="sendAnswer()">Отправить ответ</button>
+
       </div>
     </div>
 </template>
@@ -21,9 +27,11 @@
   import TruthOrLieInput from "./TruthOrLieInput";
   import QuestionAnswerInput from "./QuestionAnswerInput";
   import {REST_API_URL, roundTypes} from "../../Common";
+  import Timer from "../quiz/Timer";
 
   export default {
     components: {
+      Timer,
       QuestionAnswerInput,
       TruthOrLieInput},
     name: "answer-view",
@@ -35,7 +43,8 @@
           questionId: '',
           answer: ''
         },
-        roundTypes: roundTypes
+        roundTypes: roundTypes,
+        isMounted: false
       }
     },
     methods: {
@@ -53,8 +62,18 @@
     computed: {
       currentAnswer: function () {
         return this.$refs.answerInput.getAnswer();
+      },
+      time: function () {
+        if (this.isMounted) {
+          return this.$refs.timerComponent.getTime();
+        }
       }
     },
+    mounted() {
+      this.$nextTick(() => {
+        this.isMounted = true;
+      })
+    }
   }
 </script>
 
@@ -72,6 +91,9 @@
   }
   .textarea-label {
     float: left;
+  }
+  .time {
+    font-size: 5em;
   }
   #answer-view {
     display: flex;
