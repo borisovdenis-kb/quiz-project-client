@@ -91,7 +91,7 @@
           this.$set(player, 'isNameConfirmed', true);
         });
       },
-      subscribeOnGetCurrentQuestion() {
+      subscribeOnGetCommand() {
         this.stompClient.subscribe('/app/client/getCommand', frame => {
           let message = JSON.parse(frame.body);
 
@@ -105,7 +105,7 @@
           {},
           frame => {
             this.isConnected = true;
-            this.subscribeOnGetCurrentQuestion();
+            this.subscribeOnGetCommand();
             this.subscribeOnPlayerCreation();
             this.subscribeOnPlayerNameUpdating();
             this.subscribeOnPlayerNameConfirmation();
@@ -196,6 +196,6 @@
   }
 
   .time-is-over {
-    background-color: #c74642;
+    background-color: #ea454b;
   }
 </style>

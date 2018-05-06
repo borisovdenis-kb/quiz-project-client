@@ -22,7 +22,7 @@
         </div>
       </div>
 
-      <div id="stepper-container">
+      <div id="stepper-container" v-show="!isTimeOver">
         <stepper
           v-bind:current-step-index="currentQuestionIndex"
           v-bind:steps-amount="roundLength">
