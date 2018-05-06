@@ -73,6 +73,12 @@
     },
     methods: {
       sendCommand(commandName, metaInfo, content) {
+        const urlSuffix = {
+          'LOAD': '/load',
+          'SHOW_PLAYERS_ANSWERS': '/show_players_answers',
+          'CALC_PLAYERS_RESULTS': '/calc_players_results'
+        };
+
         let message = {
           command: {
             name: commandName,
@@ -80,11 +86,7 @@
           },
           content: content
         };
-        let urlSuffix = {
-          'LOAD': '/load',
-          'SHOW_PLAYERS_ANSWERS': '/show_players_answers',
-          'CALC_PLAYERS_RESULTS': '/calc_players_results'
-        };
+
         let endPointUrl = `/app/admin/command${_.get(urlSuffix, commandName, '')}`;
 
         this.stompClient.send(endPointUrl, {}, JSON.stringify(message));
